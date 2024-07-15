@@ -35,9 +35,9 @@ aidtep/
 │   └── processed/         # processed data
 │   └── model_weights/     # offline training model weights   
 └── docs/                  # documentations
+├── notebooks/             # Jupyter Notebooks
 ├── service/               # web service
 ├── simulation/            # call simulator
-├── notebooks/             # Jupyter Notebooks
 └── tests/                 # unit tests and ensemble tests
 ```
 
