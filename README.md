@@ -21,15 +21,16 @@ aidtep/
 │
 ├── README.md              # Project Description
 ├── environment.yaml       # Conda environment dependency file 
+├── aidtep/                
+│   ├── init.py            # init project
 ├── bin/                   # shell scripts
+├── config/                # configuration
 ├── data/                   
 │   ├── raw/               # raw data
 │   └── processed/         # processed data 
 ├── service/               # web service
 ├── simulation/            # call simulator
 ├── notebooks/             # Jupyter Notebooks
-├── aidtep/                
-│   ├── init.py            # init project
 ├── tests/                 
 │   ├── init.py            # 
 │   ├── test_xx            #
