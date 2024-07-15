@@ -22,19 +22,23 @@ aidtep/
 ├── README.md              # Project Description
 ├── environment.yaml       # Conda environment dependency file 
 ├── aidtep/                
-│   ├── init.py            # init project
+│   ├── data_processed     # data preprocess 
+│   ├── extract_basis      # reduce basis methods
+│   ├── forward_problem    # forward problem methods
+│   ├── inverse_problem    # inverse problem methods  
+│   ├── launcher           # entry points
+│   ├── utils              # utils  
 ├── bin/                   # shell scripts
 ├── config/                # configuration
 ├── data/                   
 │   ├── raw/               # raw data
-│   └── processed/         # processed data 
+│   └── processed/         # processed data
+│   └── model_weights/     # offline training model weights   
+└── docs/                  # documentations
 ├── service/               # web service
 ├── simulation/            # call simulator
 ├── notebooks/             # Jupyter Notebooks
-├── tests/                 
-│   ├── init.py            # 
-│   ├── test_xx            #
-└── docs/                  # documentation 
+└── tests/                 # unit tests and ensemble tests
 ```
 
 ## Installation
