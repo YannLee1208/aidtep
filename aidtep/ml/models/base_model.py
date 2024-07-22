@@ -34,8 +34,3 @@ class BaseModel(ABC):
     @abstractmethod
     def load_model(self, filepath: str) -> None:
         pass
-    
-
-
-
-
