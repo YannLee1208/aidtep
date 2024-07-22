@@ -6,6 +6,9 @@ from aidtep.ml.models.base_model import BaseModel
 
 
 class SklearnModel(BaseModel):
+    """
+    Wrapper class for sklearn models.
+    """
     def __init__(self, model: BaseEstimator):
         super().__init__()
         self.model = model

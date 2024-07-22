@@ -1,3 +1,5 @@
+from typing import Literal
+
 import torch
 from torch import nn
 
@@ -5,7 +7,16 @@ from aidtep.ml.models.base_model import BaseModel
 
 
 class PyTorchModel(BaseModel):
-    def __init__(self, model: nn.Module, criterion, optimizer, device: str = 'cpu'):
+    """
+    PyTorch model class for training and prediction.
+    """
+    def __init__(self, model: nn.Module, criterion, optimizer, device: Literal['cpu', 'cuda'] = 'cpu'):
+        """
+        :param model: PyTorch model
+        :param criterion: Loss function
+        :param optimizer: Optimizer
+        :param device (str): Device to run the model on (cpu or cuda)
+        """
         super().__init__()
         self.model = model.to(device)
         self.criterion = criterion

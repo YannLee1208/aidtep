@@ -1,17 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Any
 from loguru import logger
-from sklearn.base import BaseEstimator
-import joblib
-import numpy as np
-        
-import torch
-import torch.nn as nn
-import torch.optim as optim
-import pickle
 
 
 class BaseModel(ABC):
+    """
+    Base class for all models. Now it is an abstract class.
+    """
     def __init__(self):
         self.logger = logger
 
