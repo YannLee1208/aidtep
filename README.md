@@ -26,6 +26,7 @@ aidtep/
 │   ├── extract_basis      # reduce basis methods
 │   ├── forward_problem    # forward problem methods
 │   ├── inverse_problem    # inverse problem methods  
+│   ├── ml                 # machine learning 
 │   ├── launcher           # entry points
 │   ├── utils              # utils  
 ├── bin/                   # shell scripts
