@@ -16,3 +16,5 @@ def normalize_2d_array(arr: np.array) -> Tuple[np.array, np.array]:
     col_sums = arr.sum(axis=0)
     normalized_arr = arr / col_sums
     return normalized_arr, col_sums
+
+
