@@ -1,3 +1,15 @@
-data:
-  path:
+device: cuda:0
+log:
+  dir: ../../log
+data_process:
+  IAEA:
+    input:
+      phione_path: /home/sda/IAEA/phione1.txt
+      phitwo_path: /home/sda/IAEA/phitwo1.txt
+      power_path: /home/sda/IAEA/power1.txt
+      obs_path: /home/sda/IAEA/phitwo1.txt
+    process:
+
+
+  HP1000:
     mu_input_path: ../../data/raw/AinpowerIAEA5517.txt

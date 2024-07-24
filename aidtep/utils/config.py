@@ -2,7 +2,17 @@ import yaml
 import os
 from loguru import logger
 
+
 class AidtepConfig:
+    """
+    AidtepConfig is a singleton class to load and store the configuration.
+    Usage:
+    ```
+    init_config('config.yaml')
+    config = get_config()
+    config.get('key1.key2.key3', default=None)
+    ```
+    """
     _instance = None
 
     def __new__(cls, config_path: str = None):
