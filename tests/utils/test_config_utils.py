@@ -1,4 +1,4 @@
-from aidtep.utils.config_utils import init_config, AidtepConfig
+from aidtep.utils.config import init_config, AidtepConfig
 
 import unittest
 from unittest.mock import patch, mock_open

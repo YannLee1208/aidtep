@@ -1,6 +1,6 @@
 import unittest
 
-from aidtep.utils.file_utils import check_file_exist
+from aidtep.utils.file import check_file_exist
 
 
 class TestFileUtils(unittest.TestCase):
