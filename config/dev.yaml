@@ -1,4 +1,5 @@
 device: cuda:0
+random_seed: 0
 log:
   dir: ../../log
 data_process:
@@ -8,7 +9,17 @@ data_process:
       phitwo_path: /home/sda/IAEA/phitwo1.txt
       power_path: /home/sda/IAEA/power1.txt
       obs_path: /home/sda/IAEA/phitwo1.txt
+    output:
+      obs_path: ../../data/processed/IAEA/obs_{data_type}_{down_sample_factor}_{down_sample_strategy}_{random_range}_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+
     process:
+      data_type: float16
+      down_sample_factor: 2
+      down_sample_strategy: mean
+      x_sensor_position: [0, 10, 20, 30, 40, 50, 60, 70, 80, 85]
+      y_sensor_position: [0, 10, 20, 30, 40, 50, 60, 70, 80, 85]
+      random_range: 0
+      noise_ratio: 0
 
 
   HP1000:

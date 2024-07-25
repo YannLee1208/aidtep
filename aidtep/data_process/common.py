@@ -57,3 +57,46 @@ def down_sample_3d_data(data: np.ndarray, down_sample_factor: int, down_sample_s
                                                                        data.shape[2])
                                           ], axis=(1, 2))
     return down_sampled_data
+
+
+def extract_observations(data: np.ndarray, mask: np.ndarray) -> np.ndarray:
+    """
+    Extract observations from the data using the provided mask.
+    :param data: np.ndarray, shape (n, x_shape, y_shape), original data
+    :param mask: np.ndarray, shape (x_shape, y_shape), mask matrix with sensor positions
+    :return: np.ndarray, shape (n, sensor_count), extracted observations
+    """
+    # 提取传感器位置的坐标
+    sensor_positions = np.argwhere(mask == 1)
+
+    # 将传感器位置拆分为 x 和 y 坐标
+    x_positions, y_positions = sensor_positions[:, 0], sensor_positions[:, 1]
+
+    # 使用高级索引提取观测值
+    observations = data[:, x_positions, y_positions]
+
+    return observations
+
+
+def extract_observations_for_each_mask(data: np.ndarray, masks: np.ndarray) -> np.ndarray:
+    """
+    Extract observations from the data using the provided masks. Each sample may have a different mask.
+    :param data: np.ndarray, shape (n, x_shape, y_shape), original data
+    :param masks: np.ndarray, shape (n, x_shape, y_shape), mask matrices with sensor positions
+    :return: np.ndarray, shape (n, sensor_count), extracted observations
+    """
+    n, x_shape, y_shape = data.shape
+
+    # use the first mask to determine the number of sensors
+    template_positions = np.argwhere(masks[0] == 1)
+    sensor_count = len(template_positions)
+
+    # create an empty array to store the observations
+    observations = np.zeros((n, sensor_count))
+
+    for i in range(n):
+        sensor_positions = np.argwhere(masks[i] == 1)
+        x_positions, y_positions = sensor_positions[:, 0], sensor_positions[:, 1]
+        observations[i, :] = data[i, x_positions, y_positions]
+
+    return observations
