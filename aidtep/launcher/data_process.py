@@ -21,4 +21,5 @@ if __name__ == '__main__':
                  random_range=config.get("data_process.IAEA.process.random_range", default=0),
                  noise_ratio=config.get("data_process.IAEA.process.noise_ratio", default=0),
                  obs_output_path=config.get("data_process.IAEA.output.obs_path"),
+                 tessellation_output_path=config.get("data_process.IAEA.output.tessellation_path"),
                  )

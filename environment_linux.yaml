@@ -56,4 +56,5 @@ dependencies:
       - pathlib==1.0.1
       - pyyaml-6.0.1
       - pandas-2.2.2
+      - matplotlib-3.9.1
 

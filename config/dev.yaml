@@ -11,6 +11,7 @@ data_process:
       obs_path: /home/sda/IAEA/phitwo1.txt
     output:
       obs_path: ../../data/processed/IAEA/obs_{data_type}_{down_sample_factor}_{down_sample_strategy}_{random_range}_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+      tessellation_path: ../../data/processed/IAEA/tessellation_{data_type}_{down_sample_factor}_{down_sample_strategy}_{random_range}_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
 
     process:
       data_type: float16

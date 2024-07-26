@@ -15,7 +15,6 @@ def save_ndarray(file_path: str, data: np.ndarray):
     save numpy array to file
     :param file_path: file path
     :param data: numpy array
-    :return:
     """
     file_path = pth(file_path)
     file_path.parent.mkdir(parents=True, exist_ok=True)
