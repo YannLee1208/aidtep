@@ -1,5 +1,4 @@
-from aidtep.data_process.common import normalize_2d_array, extract_observations, extract_observations_for_each_mask, \
-    down_sample_3d_data
+from aidtep.data_process.common import normalize_2d_array, extract_observations, down_sample_3d_data
 
 import unittest
 import numpy as np
@@ -108,7 +107,7 @@ class TestExtractObservations(unittest.TestCase):
                         [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
                         [[9, 8, 7], [6, 5, 4], [3, 2, 1]]
                     ]),
-                    "masks": np.array([
+                    "mask": np.array([
                         [[0, 1, 0], [1, 0, 1], [0, 0, 0]],
                         [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
                     ])
@@ -126,7 +125,7 @@ class TestExtractObservations(unittest.TestCase):
                         [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
                         [[9, 8, 7], [6, 5, 4], [3, 2, 1]]
                     ]),
-                    "masks": np.array([
+                    "mask": np.array([
                         [[0, 1, 0], [1, 0, 1], [0, 0, 0]],
                         [[0, 0, 1], [0, 1, 0], [1, 0, 0]]
                     ])
@@ -144,7 +143,7 @@ class TestExtractObservations(unittest.TestCase):
                         [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
                         [[9, 8, 7], [6, 5, 4], [3, 2, 1]]
                     ]),
-                    "masks": np.zeros((2, 3, 3))
+                    "mask": np.zeros((2, 3, 3))
                 },
                 "expected_output": np.zeros((2, 0)),
                 "error": None
@@ -166,11 +165,10 @@ class TestExtractObservations(unittest.TestCase):
             with self.subTest(case["name"]):
                 if case["error"]:
                     with self.assertRaises(case["error"]):
-                        extract_observations_for_each_mask(**case["input"])
+                        extract_observations(**case["input"])
                 else:
-                    result = extract_observations_for_each_mask(**case["input"])
+                    result = extract_observations(**case["input"])
                     np.testing.assert_array_equal(result, case["expected_output"])
-
 
 
 class TestDownSample3dData(unittest.TestCase):
@@ -255,7 +253,6 @@ class TestDownSample3dData(unittest.TestCase):
             }
         ]
 
-
     def test_down_sample_3d_data(self):
         for case in self.test_down_sample_3d_data_cases:
             with self.subTest(case["name"]):
@@ -265,6 +262,7 @@ class TestDownSample3dData(unittest.TestCase):
                 else:
                     result = down_sample_3d_data(**case["input"])
                     np.testing.assert_array_equal(result, case["expected_output"])
+
 
 if __name__ == "__main__":
     unittest.main()
