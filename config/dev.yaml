@@ -4,6 +4,7 @@ log:
   dir: ../../log
 data_process:
   IAEA:
+    use: true
     input:
       phione_path: /home/sda/IAEA/phione1.txt
       phitwo_path: /home/sda/IAEA/phitwo1.txt
@@ -11,17 +12,28 @@ data_process:
       obs_path: /home/sda/IAEA/phitwo1.txt
     output:
       obs_path: ../../data/processed/IAEA/obs_{data_type}_{down_sample_factor}_{down_sample_strategy}_{random_range}_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
-      tessellation_path: ../../data/processed/IAEA/tessellation_{data_type}_{down_sample_factor}_{down_sample_strategy}_{random_range}_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+      interpolation_path: ../../data/processed/IAEA/interpolation_{method}_{data_type}_{down_sample_factor}_{down_sample_strategy}_{random_range}_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
 
     process:
-      data_type: float16
-      down_sample_factor: 2
-      down_sample_strategy: mean
-      x_sensor_position: [0, 10, 20, 30, 40, 50, 60, 70, 80, 85]
-      y_sensor_position: [0, 10, 20, 30, 40, 50, 60, 70, 80, 85]
-      random_range: 0
-      noise_ratio: 0
-
+      observation:
+        use: true
+        data_type: float16
+        x_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
+        y_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
+        down_sample:
+          use: true
+          down_sample_factor: 2
+          down_sample_strategy: mean
+        vibration:
+            use: true
+            random_range: 1
+        noise:
+            use: true
+            noise_ratio: 0.01
+      interpolation:
+        use: true
+        method: voronoi
+        interpolation_shape: [86, 86]
 
   HP1000:
     mu_input_path: ../../data/raw/AinpowerIAEA5517.txt

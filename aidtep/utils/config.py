@@ -2,36 +2,44 @@ import yaml
 import os
 from loguru import logger
 
+from aidtep.utils.file import check_file_exist
+
 
 class AidtepConfig:
     """
-    AidtepConfig is a singleton class to load and store the configuration.
+    AidtepConfig class to load and store the configuration.
     Usage:
     ```
-    init_config('config.yaml')
-    config = get_config()
-    config.get('key1.key2.key3', default=None)
+    config = AidtepConfig('config.yaml')
+    value = config.get('key1.key2.key3', default=None)
     ```
     """
-    _instance = None
 
-    def __new__(cls, config_path: str = None):
-        if cls._instance is None:
-            cls._instance = super(AidtepConfig, cls).__new__(cls)
-            cls._instance._initialized = False
-        return cls._instance
-
-    def __init__(self, config_path: str = None):
-        if self._initialized:
-            logger.warning("config already initialized, skipping")
-            return
+    def __init__(self, config_path: str = None, config_dict: dict = None):
         self.config_path = config_path
-        self.config = self._load_config()
-        self._initialized = True
+        if config_dict is not None:
+            self.config = self._wrap_config(config_dict)
+        elif config_path is not None:
+            self.config = self._load_config(config_path)
+        else:
+            raise ValueError("Either config_path or config_dict must be provided")
 
-    def _load_config(self) -> dict:
-        with open(self.config_path, 'r') as f:
-            return yaml.safe_load(f)
+    def _load_config(self, config_path: str) -> dict:
+        if not check_file_exist(config_path):
+            logger.error(f"Config file '{config_path}' not found")
+            raise FileNotFoundError(f"Config file '{config_path}' not found")
+        with open(config_path, 'r') as f:
+            config_dict = yaml.safe_load(f)
+        return self._wrap_config(config_dict)
+
+    def _wrap_config(self, config_dict: dict):
+        """
+        Recursively wrap a dictionary into AidtepConfig objects.
+        """
+        for key, value in config_dict.items():
+            if isinstance(value, dict):
+                config_dict[key] = AidtepConfig(config_dict=value)
+        return config_dict
 
     def get(self, key: str, default=None):
         keys = key.split('.')
@@ -43,22 +51,24 @@ class AidtepConfig:
             return default
         return value
 
+    def keys(self) -> list:
+        return list(self.config.keys())
+
     def __getitem__(self, key: str):
+        if key not in self.keys():
+            raise KeyError(f"Key '{key}' not found in config")
         return self.get(key)
 
     def __repr__(self):
-        return f"Config({self.config})"
+        return f"AidtepConfig({self.config})"
 
 
-def init_config(config_path: str):
-    if not os.path.exists(config_path):
-        raise FileNotFoundError(f"Config file not found: {config_path}")
-    return AidtepConfig(config_path)
+if __name__ == '__main__':
+    config_path = os.path.join(os.path.dirname(__file__), "..", "..", 'config', 'dev.yaml')
+    config = AidtepConfig(config_path)
+    print(config)
 
-
-# 获取全局配置实例
-def get_config():
-    if AidtepConfig._instance is None or not AidtepConfig._instance._initialized:
-        logger.error("Config is not initialized, call init_config(config_path) first.")
-        raise ValueError("Config is not initialized, call init_config(config_path) first.")
-    return AidtepConfig._instance
+    processes = config.get("data_process")
+    print(processes)
+    print(processes.keys())
+    print(config.get("data_process.IAEA.use"))
