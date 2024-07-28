@@ -14,8 +14,8 @@ data_process:
       phione_path: ../../data/processed/IAEA/phione.npy
       phitwo_path: ../../data/processed/IAEA/phitwo.npy
       power_path: ../../data/processed/IAEA/power.npy
-      obs_path: ../../data/processed/IAEA/obs_{data_type}_{down_sample_factor}_{down_sample_strategy}_{random_range}_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
-      interpolation_path: ../../data/processed/IAEA/interpolation_{method}_{data_type}_{down_sample_factor}_{down_sample_strategy}_{random_range}_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+      obs_path: ../../data/processed/IAEA/obs_{data_type}_{down_sample_factor}_{down_sample_strategy}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+      interpolation_path: ../../data/processed/IAEA/interpolation_{method}_{data_type}_{down_sample_factor}_{down_sample_strategy}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
     process:
       data_type: float16
       x_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
@@ -28,10 +28,10 @@ data_process:
         use: true
         vibration:
             use: true
-            random_range: 1
+            random_range: 0
         noise:
             use: true
-            noise_ratio: 0.01
+            noise_ratio: 0.0
       interpolation:
         use: true
         method: voronoi
@@ -39,3 +39,7 @@ data_process:
 
   HP1000:
     mu_input_path: ../../data/raw/AinpowerIAEA5517.txt
+
+inverse:
+  IAEA:
+    use: true
