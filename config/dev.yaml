@@ -11,19 +11,21 @@ data_process:
       power_path: /home/sda/IAEA/power1.txt
       obs_path: /home/sda/IAEA/phitwo1.txt
     output:
+      phione_path: ../../data/processed/IAEA/phione.npy
+      phitwo_path: ../../data/processed/IAEA/phitwo.npy
+      power_path: ../../data/processed/IAEA/power.npy
       obs_path: ../../data/processed/IAEA/obs_{data_type}_{down_sample_factor}_{down_sample_strategy}_{random_range}_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
       interpolation_path: ../../data/processed/IAEA/interpolation_{method}_{data_type}_{down_sample_factor}_{down_sample_strategy}_{random_range}_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
-
     process:
+      data_type: float16
+      x_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
+      y_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
+      down_sample_factor: 2
+      down_sample_strategy: mean
+      true_data: # if process phione, phitwo, power data, mainly for reshape
+        use: false
       observation:
         use: true
-        data_type: float16
-        x_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
-        y_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
-        down_sample:
-          use: true
-          down_sample_factor: 2
-          down_sample_strategy: mean
         vibration:
             use: true
             random_range: 1
