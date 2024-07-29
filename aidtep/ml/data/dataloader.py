@@ -1,8 +1,8 @@
-from typing import Tuple, Any
+from typing import Any
 
 import numpy as np
 import torch
-from torch.utils.data import TensorDataset, DataLoader, random_split, Dataset
+from torch.utils.data import DataLoader, random_split, Dataset
 from loguru import logger
 
 from aidtep.utils.file import check_file_exist
