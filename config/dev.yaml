@@ -36,8 +36,8 @@ data_process:
         use: true
         method: voronoi
         interpolation_shape: [86, 86]
-
   HP1000:
+    use: false
     mu_input_path: ../../data/raw/AinpowerIAEA5517.txt
 
 inverse:
