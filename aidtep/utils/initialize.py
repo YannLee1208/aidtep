@@ -20,6 +20,9 @@ def set_random_seed(seed: int):
         torch.cuda.manual_seed_all(seed)
 
 
-def initialize(random_seed=0, log_level=logging.INFO):
-    init_logger(log_level)
+def initialize(random_seed:int, log_dir:str, log_level=logging.INFO):
     set_random_seed(random_seed)
+    init_logger(log_dir, log_level)
+
+    torch.backends.cudnn.enabled = True
+    torch.backends.cudnn.benchmark = True
