@@ -28,7 +28,7 @@ data_process:
         use: true
         vibration:
             use: true
-            random_range: 0
+            random_range: 1
         noise:
             use: true
             noise_ratio: 0.0
@@ -40,6 +40,6 @@ data_process:
     use: false
     mu_input_path: ../../data/raw/AinpowerIAEA5517.txt
 
-inverse:
-  IAEA:
-    use: true
+
+
+

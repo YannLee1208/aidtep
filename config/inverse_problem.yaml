@@ -1,0 +1,33 @@
+device: cuda:0
+random_seed: 0
+log:
+  dir: ../../log
+inverse:
+  IAEA:
+    use: true
+    input_data:
+      path:  ../../data/processed/IAEA/interpolation_voronoi_{data_type}_{down_sample_factor}_{down_sample_strategy}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+      # here path only support parsing the parameters below, so if using interpolation_voronoi.npy, please offer the interpolation method above
+      data_type: float16
+      down_sample_factor: 2
+      down_sample_strategy: mean
+      random_range: 0
+      noise_ratio: 0.0
+      x_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
+      y_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
+    predict_data:
+      path: ../../data/processed/IAEA/phione.npy
+    train_ratio: 0.85
+    val_ratio: 0.05
+    batch_size: 64
+    model:
+      type: NVT_ResNet
+      path: ../../data/model_weights/IAEA/{output}/{type}_{input}.path
+    train:
+      use: true
+      lr: 0.005
+      epochs: 100
+
+
+
+
