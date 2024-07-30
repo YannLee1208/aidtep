@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from aidtep.ml.models.torch_model import PyTorchModel
+from aidtep.ml.models.base_models.torch_model import PyTorchModel
 
 
 class Trainer:

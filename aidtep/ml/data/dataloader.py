@@ -23,8 +23,7 @@ class CustomDataset(Dataset):
         return x, y
 
 
-def create_dataloaders(x_data_path: str, y_data_path: str, train_ratio: float, val_ratio: float, batch_size: int,
-                       seed: int = 0) -> tuple[
+def create_dataloaders(x_data_path: str, y_data_path: str, train_ratio: float, val_ratio: float, batch_size: int) -> tuple[
     DataLoader[Any], DataLoader[Any], DataLoader[Any]]:
     """
     Create torch Dataloader from ndarray, split by train_ratio and val_ratio
@@ -50,8 +49,6 @@ def create_dataloaders(x_data_path: str, y_data_path: str, train_ratio: float, v
     val_size = int(val_ratio * total_size)
     test_size = total_size - train_size - val_size
 
-    # set random seed
-    torch.manual_seed(seed)
     train_dataset, val_dataset, test_dataset = random_split(dataset, [train_size, val_size, test_size])
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
