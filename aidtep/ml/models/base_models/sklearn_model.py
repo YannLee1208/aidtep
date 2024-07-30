@@ -2,7 +2,7 @@ import joblib
 import numpy as np
 from sklearn.base import BaseEstimator
 
-from aidtep.ml.models.base_model import BaseModel
+from aidtep.ml.models.base_models.base_model import BaseModel
 
 
 class SklearnModel(BaseModel):

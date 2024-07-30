@@ -4,8 +4,8 @@ from loguru import logger
 from torch import nn
 from torch.utils.data import DataLoader
 
-from aidtep.ml.models.base_model import BaseModel
-from aidtep.ml.utils.log_utils import ProgressLogger
+from aidtep.ml.models.base_models.base_model import BaseModel
+from aidtep.ml.utils.log import ProgressLogger
 from aidtep.utils.file import make_parent_dir, check_file_exist
 
 
