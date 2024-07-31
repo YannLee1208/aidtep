@@ -3,7 +3,7 @@ from typing import Optional, Literal
 from loguru import logger
 
 from aidtep.ml.criterien.L2 import L2Loss
-from aidtep.ml.processor.trainer import Trainer
+from aidtep.ml.processor.processor import Processor
 from aidtep.ml.models.base_models.torch_model import PyTorchModel
 from aidtep.ml.data.dataloader import create_dataloaders
 from aidtep.ml.utils.common import get_model_class, get_criterien, get_optimizer, get_scheduler
@@ -40,9 +40,15 @@ class IAEAInverseBuilder:
 
     def train(self, epochs: int, model_path: str):
         logger.info("Starting training")
-        trainer = Trainer(self.model)
-        trainer.train(self.train_loader, self.val_loader, epochs, model_path)
+        processor = Processor(self.model)
+        processor.train(self.train_loader, self.val_loader, epochs, model_path)
         logger.info("Training done")
+
+    def test(self, model_path: str):
+        self.model.load_model(model_path)
+        processor = Processor(self.model)
+        return processor.test(self.test_loader)
+
 
 
 if __name__ == '__main__':

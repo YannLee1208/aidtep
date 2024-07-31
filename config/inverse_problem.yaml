@@ -24,9 +24,11 @@ inverse:
       type: NVT_ResNet
       path: ../../data/model_weights/IAEA/{output}/{type}_{input}.path
     train:
-      use: true
+      use: false
       lr: 0.005
       epochs: 100
+    test:
+      use: true
 
 
 

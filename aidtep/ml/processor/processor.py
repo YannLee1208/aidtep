@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from aidtep.ml.models.base_models.torch_model import PyTorchModel
 
 
-class Trainer:
+class Processor:
     def __init__(self, model: PyTorchModel):
         self.model = model
 
@@ -23,7 +23,7 @@ class Trainer:
         train_losses = []
         val_losses = []
         for epoch in range(epochs):
-            train_loss = self.model.train(train_loader, progress_prefix=f"Epoch {epoch+1}: ")
+            train_loss = self.model.train(train_loader, progress_prefix=f"Epoch {epoch + 1}: ")
             val_loss = self.model.evaluate(val_loader, progress_prefix=f"Validation: ")
             train_losses.append(train_loss)
             val_losses.append(val_loss)
@@ -34,3 +34,12 @@ class Trainer:
             torch.cuda.empty_cache()
 
         return train_losses, val_losses
+
+    def test(self, test_loader: DataLoader):
+        """
+        Test the model
+        :param test_loader: DataLoader for test data
+        :return: None
+        """
+        test_loss = self.model.evaluate(test_loader, progress_prefix="Test: ")
+        return test_loss

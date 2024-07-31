@@ -100,7 +100,7 @@ class PyTorchModel(BaseModel):
                 loss = self.criterion(outputs, batch_y)
                 total_loss += loss.item()
 
-                criterion_losses = {"train_loss": loss.item()}
+                criterion_losses = {"test_loss": loss.item()}
                 for name, criterion in self.additional_criterions.items():
                     criterion_losses[name] = criterion(outputs, batch_y).item()
                 self.progress_logger.log_batch(progress_prefix, idx + 1, batch_number, criterion_losses)
@@ -126,7 +126,7 @@ class PyTorchModel(BaseModel):
         if not check_file_exist(filepath):
             raise ValueError(f"File not found: {filepath}")
         self.logger.info(f"Loading PyTorch model from {filepath}...")
-        self.model.load_state_dict(torch.load(filepath, map_location=self.device))
+        self.model.load_state_dict(torch.load(filepath, map_location=self.device, weights_only=True))
         self.model.eval()
 
     def log_memory_usage(self):

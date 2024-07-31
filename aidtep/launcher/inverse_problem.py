@@ -62,3 +62,9 @@ if __name__ == '__main__':
             if dataset_config.get("train.use"):
                 epochs = dataset_config.get("train.epochs")
                 builder.train(epochs, model_path)
+
+            if dataset_config.get("test.use"):
+                test_loss = builder.test(model_path)
+                logging.info(f"Test loss: {test_loss}")
+
+
