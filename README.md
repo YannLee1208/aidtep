@@ -47,8 +47,8 @@ aidtep/
 ### Using Conda
 * Create and activate conda enviroment
     ```sh
-    conda env create -f environment.yaml
-    conda activate my_env
+    conda env create -f environment_linux.yaml
+    conda activate aidtep
     ```
 
 

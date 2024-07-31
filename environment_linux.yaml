@@ -47,7 +47,7 @@ dependencies:
       - nvidia-nvjitlink-cu12==12.5.82
       - nvidia-nvtx-cu12==12.1.105
       - scikit-learn==1.5.1
-      - scipy==1.14.0
+      - scipy-1.13.1
       - sympy==1.13.0
       - threadpoolctl==3.5.0
       - torch==2.3.1
@@ -57,4 +57,5 @@ dependencies:
       - pyyaml-6.0.1
       - pandas-2.2.2
       - matplotlib-3.9.1
+
 

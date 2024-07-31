@@ -1,16 +1,15 @@
 import os
-import unittest
 import numpy as np
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsRegressor
 
-from aidtep.ml.models.sklearn_model import SklearnModel
+from aidtep.ml.models.base_models.sklearn_model import SklearnModel
 
 import unittest
 import torch
 from torch.optim import SGD
 from torch.nn import MSELoss
-from aidtep.ml.models.torch_model import PyTorchModel
+from aidtep.ml.models.base_models.torch_model import PyTorchModel
 
 
 class TestSklearnModel(unittest.TestCase):
