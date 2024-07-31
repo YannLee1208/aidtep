@@ -12,7 +12,7 @@ inverse:
       down_sample_factor: 2
       down_sample_strategy: mean
       random_range: 0
-      noise_ratio: 0.0
+      noise_ratio: 0.01
       x_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
       y_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
     predict_data:
@@ -29,6 +29,9 @@ inverse:
       epochs: 100
     test:
       use: true
+      model_path: # Case when using different data for training and testing.
+        use: true #  means use this model_path instead of the model_path in model.
+        path: ../../data/model_weights/IAEA/phione/NVT_ResNet_interpolation_voronoi_float16_2_mean_vib_0_noise_0.path
 
 
 
