@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from loguru import logger
 
-from aidtep.data_process.interpolation import get_interpolator, VoronoiInterpolator, VoronoiInterpolatorLinear
+from aidtep.data_process.interpolation import get_interpolator_class, VoronoiInterpolator, VoronoiInterpolatorLinear
 
 
 class TestVoronoiInterpolation(unittest.TestCase):
@@ -141,6 +141,7 @@ class TestVoronoiInterpolation(unittest.TestCase):
                 "error": None
             }
         ]
+
     def test_voronoi_interpolation(self):
         for case in self.test_voronoi_cases:
             with self.subTest(case["name"]):
@@ -172,11 +173,10 @@ class TestVoronoiInterpolation(unittest.TestCase):
             with self.subTest(case["name"]):
                 if case["error"]:
                     with self.assertRaises(case["error"]):
-                        get_interpolator(case["input"])
+                        get_interpolator_class(case["input"])()
                 else:
-                    interpolator = get_interpolator(case["input"])
+                    interpolator = get_interpolator_class(case["input"])()
                     self.assertIsInstance(interpolator, case["expected_output"])
-
 
 
 if __name__ == "__main__":

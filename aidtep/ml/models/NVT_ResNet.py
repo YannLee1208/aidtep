@@ -1,5 +1,7 @@
 from torch import nn
 
+from aidtep.ml.models import ModelRegistry
+
 
 class BasicBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1):
@@ -28,7 +30,12 @@ class BasicBlock(nn.Module):
         return out
 
 
-class NVT_ResNet(nn.Module):
+class NVT_ResNet(nn.Module, ModelRegistry):
+
+    @classmethod
+    def name(cls):
+        return 'NVT_ResNet'
+
     def __init__(self, block=BasicBlock, layers=None):
         super(NVT_ResNet, self).__init__()
         if layers is None:

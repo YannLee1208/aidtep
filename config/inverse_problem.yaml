@@ -20,13 +20,24 @@ inverse:
     train_ratio: 0.85
     val_ratio: 0.05
     batch_size: 64
+    criterion:
+      type: mse
     model:
       type: NVT_ResNet
-      path: ../../data/model_weights/IAEA/{output}/{type}_{input}.path
+      path: ../../data/model_weights/IAEA/{output}/{type}_{input}_2.path
     train:
-      use: false
+      use: true
       lr: 0.005
       epochs: 100
+      optimizer:
+        type: adam
+        args:
+          weight_decay: 0.0001
+      scheduler:
+        type: step_lr
+        args:
+          gamma: 0.05
+          step_size: 50
     test:
       use: true
       model_path: # Case when using different data for training and testing.

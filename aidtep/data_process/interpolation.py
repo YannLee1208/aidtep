@@ -1,15 +1,35 @@
 from abc import ABC, abstractmethod
 import numpy as np
+from loguru import logger
 from scipy.interpolate import griddata
 
+from aidtep.utils.common import Registry
 
-class Interpolator(ABC):
+
+class Interpolator(Registry):
+    interpolator_mapping = {}
+
+    @classmethod
+    def register(cls):
+        cls.interpolator_mapping[cls.name()] = cls
+        logger.info(f"Registering interpolation class  {cls.__name__} '{cls.name()}'")
+
+    @classmethod
+    def get(cls, name):
+        if name not in cls.interpolator_mapping:
+            raise ValueError(f"Unknown interpolation method: {name}")
+        return cls.interpolator_mapping[name]
+
     @abstractmethod
     def interpolate(self, observations: np.ndarray, sensor_position_mask: np.ndarray) -> np.ndarray:
         pass
 
 
 class VoronoiInterpolator(Interpolator):
+    @classmethod
+    def name(cls):
+        return "voronoi"
+
     def interpolate(self, observations: np.ndarray, sensor_position_mask: np.ndarray) -> np.ndarray:
         """
         Perform Voronoi interpolation on the observations.
@@ -39,6 +59,10 @@ class VoronoiInterpolator(Interpolator):
 
 
 class VoronoiInterpolatorLinear(Interpolator):
+    @classmethod
+    def name(cls):
+        return "voronoi_linear"
+
     def interpolate(self, observations: np.ndarray, sensor_position_mask: np.ndarray) -> np.ndarray:
         """
         Perform Voronoi interpolation on the observations.
@@ -61,20 +85,12 @@ class VoronoiInterpolatorLinear(Interpolator):
         interpolated_data = np.zeros((n_sample, x_shape, y_shape))
 
         for i in range(n_sample):
-            # voronoi tessellation
             Z = griddata(sensor_positions, observations[i], grid_points, method='linear').reshape(x_shape, y_shape)
             interpolated_data[i] = Z
         return interpolated_data
 
 
-INTERPOLATION_MAPPING = {
-    "voronoi": VoronoiInterpolator,
-    "voronoi_linear": VoronoiInterpolatorLinear
-}
+def get_interpolator_class(interpolation_method):
+    interpolator = Interpolator.get(interpolation_method)
+    return interpolator
 
-
-def get_interpolator(interpolation_method):
-    interpolator_class = INTERPOLATION_MAPPING.get(interpolation_method)
-    if not interpolator_class:
-        raise ValueError(f"Unknown interpolation method '{interpolation_method}'")
-    return interpolator_class()
