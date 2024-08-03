@@ -1,8 +1,15 @@
 import torch
 from torch import nn
 
+from aidtep.ml.criterion import CriterionRegistry
 
-class L2Loss(nn.Module):
+
+class L2Loss(nn.Module, CriterionRegistry):
+
+    @classmethod
+    def name(cls):
+        return "l2"
+
     def __init__(self):
         super(L2Loss, self).__init__()
 
@@ -16,7 +23,12 @@ class L2Loss(nn.Module):
         return errors.mean()
 
 
-class LinfLoss(nn.Module):
+class LinfLoss(nn.Module, CriterionRegistry):
+
+    @classmethod
+    def name(cls):
+        return "linf"
+
     def __init__(self):
         super(LinfLoss, self).__init__()
 
