@@ -48,7 +48,7 @@ class TestExtractObservations(unittest.TestCase):
     def setUp(self):
         self.test_extract_observations_cases = [
             {
-                "name": "normal_case",
+                "name": "normal_2d_case",
                 "input": {
                     "data": np.array([
                         [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
@@ -96,12 +96,9 @@ class TestExtractObservations(unittest.TestCase):
                     [5]
                 ]),
                 "error": None
-            }
-        ]
-
-        self.test_extract_observations_for_each_mask_cases = [
+            },
             {
-                "name": "normal_case",
+                "name": "normal_3d_case",
                 "input": {
                     "data": np.array([
                         [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
@@ -137,7 +134,7 @@ class TestExtractObservations(unittest.TestCase):
                 "error": None
             },
             {
-                "name": "empty_masks",
+                "name": "empty_3d_masks",
                 "input": {
                     "data": np.array([
                         [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
@@ -147,21 +144,35 @@ class TestExtractObservations(unittest.TestCase):
                 },
                 "expected_output": np.zeros((2, 0)),
                 "error": None
-            }
+            },
+            {
+                "name": "1d_mask",
+                "input": {
+                    "data": np.array([
+                        [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+                    ]),
+                    "mask": np.zeros((2,))
+                },
+                "expected_output": np.zeros((2, 0)),
+                "error": ValueError
+            },
+            {
+                "name": "3d_mask_shape_not_equal",
+                "input": {
+                    "data": np.array([
+                        [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+                        [[9, 8, 7], [6, 5, 4], [3, 2, 1]]
+                    ]),
+                    "mask": np.zeros((2,3,1))
+                },
+                "expected_output": np.zeros((2, 0)),
+                "error": ValueError
+            },
+
         ]
 
     def test_extract_observations(self):
         for case in self.test_extract_observations_cases:
-            with self.subTest(case["name"]):
-                if case["error"]:
-                    with self.assertRaises(case["error"]):
-                        extract_observations(**case["input"])
-                else:
-                    result = extract_observations(**case["input"])
-                    np.testing.assert_array_equal(result, case["expected_output"])
-
-    def test_extract_observations_for_each_mask(self):
-        for case in self.test_extract_observations_for_each_mask_cases:
             with self.subTest(case["name"]):
                 if case["error"]:
                     with self.assertRaises(case["error"]):

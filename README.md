@@ -20,7 +20,7 @@ AI enhanced Digital Twin Engineering Platform (AIDTEP)
 aidtep/
 │
 ├── README.md              # Project Description
-├── environment.yaml       # Conda environment dependency file 
+├── environment_linux.yaml # Conda environment dependency file 
 ├── aidtep/                
 │   ├── data_processed     # data preprocess 
 │   ├── extract_basis      # reduce basis methods
