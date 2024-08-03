@@ -51,6 +51,16 @@ class AidtepConfig:
             return default
         return value
 
+    def get_dict(self, key: str):
+        value = self.get(key)
+        if not value:
+            return {}
+
+        if isinstance(value, AidtepConfig):
+            return value.to_dict()
+        if isinstance(value, dict):
+            return value
+
     def keys(self) -> list:
         return list(self.config.keys())
 
@@ -61,6 +71,13 @@ class AidtepConfig:
 
     def __repr__(self):
         return f"AidtepConfig({self.config})"
+
+    def to_dict(self):
+        if not self.config:
+            return {}
+        return {k : v.to_dict() if isinstance(v, AidtepConfig) else v for k, v in self.config.items()}
+
+
 
 
 if __name__ == '__main__':
