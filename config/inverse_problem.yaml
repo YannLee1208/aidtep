@@ -24,7 +24,8 @@ inverse:
       type: mse
     model:
       type: NVT_ResNet
-      path: ../../data/model_weights/IAEA/{output}/{type}_{input}_2.path
+      path: ../../data/model_weights/IAEA/{output}/{type}_{input}.path
+      overwrite: false
     train:
       use: true
       lr: 0.005

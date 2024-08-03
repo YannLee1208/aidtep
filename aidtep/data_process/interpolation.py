@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 import numpy as np
 from loguru import logger
 from scipy.interpolate import griddata

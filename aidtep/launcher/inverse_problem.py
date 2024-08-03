@@ -49,7 +49,10 @@ if __name__ == '__main__':
             input_data_path = parse_input_data(dataset_config)
             predict_data_path = dataset_config.get("predict_data.path")
             model_type = dataset_config.get("model.type")
-            model_path = parse_model_path(dataset_config.get("model.path"), input_data_path, predict_data_path, model_type)
+            model_overwrite = dataset_config.get("model.overwrite")
+            model_path = None
+            if model_overwrite:
+                model_path = parse_model_path(dataset_config.get("model.path"), input_data_path, predict_data_path, model_type)
             train_ratio = dataset_config.get("train_ratio")
             val_ratio = dataset_config.get("val_ratio")
             batch_size = dataset_config.get("batch_size")
