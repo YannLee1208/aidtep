@@ -1,7 +1,7 @@
 device: cuda:0
 random_seed: 0
 log:
-  dir: ../../logs
+  dir: ../../log
 data_process:
   IAEA:
     use: true
