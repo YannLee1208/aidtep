@@ -1,7 +1,7 @@
 from aidtep.data_process.common import down_sample_3d_data, extract_observations
 from aidtep.data_process.noise import add_noise
 from aidtep.data_process.sensor_position import generate_2d_specific_mask
-from aidtep.data_process.interpolation import get_interpolator
+from aidtep.data_process.interpolation import get_interpolator_class
 from aidtep.data_process.vibration import generate_vibrated_masks
 from aidtep.utils import constants
 from aidtep.utils.file import save_ndarray, check_file_exist
@@ -126,7 +126,7 @@ class IAEADataProcessBuilder:
             self.observation = np.load(self.obs_output_path)
 
         self.position_mask = generate_2d_specific_mask(x_shape, y_shape, x_sensor_position, y_sensor_position)
-        interpolator = get_interpolator(tessellation_type)
+        interpolator = get_interpolator_class(tessellation_type)()
         self.interpolation = interpolator.interpolate(self.observation, self.position_mask)
         logger.debug(f"After interpolation, tessellation shape: {self.interpolation.shape}")
         save_ndarray(file_path=self.interpolation_output_path, data=self.interpolation)

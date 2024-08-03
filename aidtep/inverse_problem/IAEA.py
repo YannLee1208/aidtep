@@ -1,13 +1,14 @@
-import logging
 from typing import Optional, Literal
 from loguru import logger
 
-from aidtep.ml.criterien.L2 import L2Loss
+from aidtep.ml.criterion.L2 import L2Loss
 from aidtep.ml.processor.processor import Processor
 from aidtep.ml.models.base_models.torch_model import PyTorchModel
 from aidtep.ml.data.dataloader import create_dataloaders
-from aidtep.ml.utils.common import get_model_class, get_criterien, get_optimizer, get_scheduler
-from aidtep.utils.initialize import initialize
+from aidtep.ml.scheduler import get_scheduler_class
+from aidtep.ml.optimizer import get_optimizer_class
+from aidtep.ml.criterion import get_criterion_class
+from aidtep.ml.models import get_model_class
 
 
 class IAEAInverseBuilder:
@@ -22,17 +23,16 @@ class IAEAInverseBuilder:
         logger.info("Dataloaders built")
         return self
 
-    def build_model(self, model_type: str, criterien: str, optimizer: str, scheduler: str, lr: float,
-                    device: Optional[Literal['cpu', 'cuda']]):
-        logger.info(f"Buiding model of type {model_type}, criterien {criterien}, optimizer {optimizer}, scheduler {scheduler}, lr {lr}")
+    def build_model(self, model_type: str, criterion_type: str, optimizer_type: str, scheduler_type: str, lr: float,
+                    device: Optional[Literal['cpu', 'cuda']], criterion_args: Optional[dict] = None, optimizer_args: Optional[dict] = None, scheduler_args: Optional[dict] = None):
+        logger.info(f"Buiding model of type {model_type}, criterion {criterion_type}, optimizer {optimizer_type}, scheduler {scheduler_type}, lr {lr}")
         model = get_model_class(model_type)()
-        criterion = get_criterien(criterien)()
-        optimizer = get_optimizer(optimizer)(model.parameters(), lr=lr)
-        # TODO : design a better scheduler
-        scheduler = get_scheduler(scheduler)(optimizer, step_size = 50, gamma = 0.1)
+        criterion = get_criterion_class(criterion_type)(**criterion_args)
+        optimizer = get_optimizer_class(optimizer_type)(model.parameters(), lr=lr, **optimizer_args)
+        scheduler = get_scheduler_class(scheduler_type)(optimizer, **scheduler_args)
         self.model = PyTorchModel(model, criterion, optimizer, scheduler, device)
 
-        logger.info("Adding criterien")
+        logger.info("Adding l2 criterion")
         self.model.add_criteria("L2", L2Loss())
 
         logger.info("Model built")
@@ -52,6 +52,14 @@ class IAEAInverseBuilder:
 
 
 if __name__ == '__main__':
-    initialize(log_level=logging.DEBUG)
+    # initialize(log_level=logging.DEBUG)
     # import torch
     # print(torch.cuda.is_available())
+
+    # get_model_class("NVT_ResNet")
+    loss = get_criterion_class("l2")()
+    model = get_model_class("NVT_ResNet")()
+    optimizer = get_optimizer_class("adam")(model.parameters(), lr=0.001)
+    import torch
+    print(loss(torch.Tensor([1, 2, 3]), torch.Tensor([1, 2, 2])))
+    print(optimizer)

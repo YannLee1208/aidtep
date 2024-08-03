@@ -2,7 +2,6 @@ import logging
 import os
 
 from aidtep.inverse_problem.IAEA import IAEAInverseBuilder
-from aidtep.ml.utils.common import get_model_class
 from aidtep.utils.config import AidtepConfig
 from aidtep.utils.initialize import initialize
 
@@ -46,6 +45,7 @@ if __name__ == '__main__':
     for dataset_name in config_inverse.keys():
         dataset_config = config_inverse.get(dataset_name)
         if dataset_config.get("use"):
+
             input_data_path = parse_input_data(dataset_config)
             predict_data_path = dataset_config.get("predict_data.path")
             model_type = dataset_config.get("model.type")
@@ -58,7 +58,16 @@ if __name__ == '__main__':
             # TODO: general builder
             builder = IAEAInverseBuilder()
             builder.build_dataloaders(input_data_path, predict_data_path, train_ratio, val_ratio, batch_size)
-            builder.build_model(model_type, "", "", "",  lr, device)
+
+            # build model
+            optimizer_type = dataset_config.get("train.optimizer.type")
+            optimizer_args = dataset_config.get_dict("train.optimizer.args")
+            criterion_type = dataset_config.get("criterion.type")
+            criterion_args = dataset_config.get_dict("criterion.args")
+            scheduler_type = dataset_config.get("train.scheduler.type")
+            scheduler_args = dataset_config.get_dict("train.scheduler.args")
+            builder.build_model(model_type=model_type, criterion_type=criterion_type, criterion_args=criterion_args, optimizer_type=optimizer_type,
+                                optimizer_args=optimizer_args, scheduler_type=scheduler_type, scheduler_args=scheduler_args, lr=lr, device=device)
             if dataset_config.get("train.use"):
                 epochs = dataset_config.get("train.epochs")
                 builder.train(epochs, model_path)
