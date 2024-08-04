@@ -4,7 +4,38 @@ from loguru import logger
 
 from aidtep.utils.initialize import initialize
 from aidtep.utils.config import AidtepConfig
-from aidtep.data_process.IAEA_process import IAEADataProcessBuilder
+from aidtep.data_process.processor import get_processor_class
+
+
+def parse_true_data_path(dataset_config: AidtepConfig):
+    data_path_format = dataset_config.get("true_data_path_format")
+    data_type = dataset_config.get("raw_data.data_type")
+    down_sample_factor = dataset_config.get("raw_data.down_sample_factor")
+    down_sample_strategy = dataset_config.get("raw_data.down_sample_strategy")
+    return data_path_format.format(data_type=data_type, down_sample_factor=down_sample_factor,
+                                   down_sample_strategy=down_sample_strategy)
+
+def parse_output_data_path(dataset_config: AidtepConfig):
+    obs_data_path_format = dataset_config.get("obs_data_path_format")
+    intepolation_data_path_format = dataset_config.get("interpolation_data_path_format")
+    data_type = dataset_config.get("raw_data.data_type")
+    down_sample_factor = dataset_config.get("raw_data.down_sample_factor")
+    down_sample_strategy = dataset_config.get("raw_data.down_sample_strategy")
+    x_sensor_position = dataset_config.get("observation.args.x_sensor_position")
+    y_sensor_position = dataset_config.get("observation.args.y_sensor_position")
+    random_range = dataset_config.get("observation.args.random_range")
+    noise_ratio = dataset_config.get("observation.args.noise_ratio")
+    interpolation_method = dataset_config.get("interpolation.args.method")
+    return obs_data_path_format.format(data_type=data_type, down_sample_factor=down_sample_factor,
+                                       down_sample_strategy=down_sample_strategy,
+                                       x_sensor_position=x_sensor_position, y_sensor_position=y_sensor_position,
+                                       random_range=random_range, noise_ratio=noise_ratio), \
+        intepolation_data_path_format.format(method=interpolation_method, data_type=data_type,
+                                             down_sample_factor=down_sample_factor,
+                                             down_sample_strategy=down_sample_strategy,
+                                             x_sensor_position=x_sensor_position, y_sensor_position=y_sensor_position,
+                                             random_range=random_range, noise_ratio=noise_ratio)
+
 
 if __name__ == '__main__':
     config_path = os.path.join(os.path.dirname(__file__), "..", "..", 'config', 'data_process.yaml')
@@ -15,53 +46,46 @@ if __name__ == '__main__':
     for dataset_name in config_data_process.keys():
         dataset_config = config_data_process.get(dataset_name)
         if dataset_config.get("use"):
-            # common config
-            obs_output_path = dataset_config.get("output.obs_path")
-            interpolation_path = dataset_config.get("output.interpolation_path")
-            data_type = dataset_config.get("process.data_type")
-            x_sensor_position = dataset_config.get("process.x_sensor_position")
-            y_sensor_position = dataset_config.get("process.y_sensor_position")
-            down_sample_factor = dataset_config.get("process.down_sample_factor")
-            down_sample_strategy = dataset_config.get("process.down_sample_strategy")
+            true_data_path = parse_true_data_path(dataset_config)
+            obs_output_path, interpolation_output_path = parse_output_data_path(dataset_config)
+            logger.info(f"start process {dataset_name} data")
+            logger.info(f"true data path: {true_data_path}")
+            logger.info(f"output data path: {obs_output_path}")
+            logger.info(f"interpolation data path: {interpolation_output_path}")
 
-            random_range = dataset_config.get("process.observation.vibration.random_range")
-            noise_ratio = float(dataset_config.get("process.observation.noise.noise_ratio"))
-            interp_method = dataset_config.get("process.interpolation.method")
-            interp_shape = dataset_config.get("process.interpolation.interpolation_shape")
+            processor = get_processor_class(dataset_name)(
+                true_data_path=true_data_path,
+                obs_output_path =obs_output_path,
+                interpolation_output_path=interpolation_output_path
+            )
 
-            obs_output_path = obs_output_path.format(data_type=data_type, down_sample_factor=down_sample_factor,
-                                                     down_sample_strategy=down_sample_strategy,
-                                                     x_sensor_position=x_sensor_position,
-                                                     y_sensor_position=y_sensor_position, random_range=random_range,
-                                                     noise_ratio=noise_ratio)
-            interpolation_path = interpolation_path.format(method=interp_method, data_type=data_type,
-                                                           down_sample_factor=down_sample_factor,
-                                                           down_sample_strategy=down_sample_strategy,
-                                                           x_sensor_position=x_sensor_position,
-                                                           y_sensor_position=y_sensor_position,
-                                                           random_range=random_range, noise_ratio=noise_ratio)
+            if dataset_config.get("raw_data.use"):
+                data_type = dataset_config.get("raw_data.data_type")
+                input_path = dataset_config.get_dict("raw_data.input")
+                processor.load_raw_data(data_type, **input_path)
 
-            # TODO: replace specific ProcessBuilder with general ProcessBuilder
-            IA = IAEADataProcessBuilder(obs_output_path, interpolation_path)
-            if dataset_config.get("process.true_data.use"):
-                IA.get_true_date(
-                    dataset_config.get("input.phione_path"),
-                    dataset_config.get("output.phione_path"),
-                    dataset_config.get("input.phitwo_path"), dataset_config.get("output.phitwo_path"),
-                    dataset_config.get("input.power_path"), dataset_config.get("output.power_path"),
-                    data_type, down_sample_factor, down_sample_strategy)
+                down_sample_factor = dataset_config.get("raw_data.down_sample_factor")
+                down_sample_strategy = dataset_config.get("raw_data.down_sample_strategy")
+                if dataset_config.get("raw_data.down_sample.use"):
+                    processor.down_sample_raw_data(down_sample_factor, down_sample_strategy)
+                if dataset_config.get("raw_data.save.use"):
+                    output_args = dataset_config.get_dict("raw_data.save.args")
+                    processor.save_raw_data(data_type, down_sample_factor, down_sample_strategy, **output_args)
 
-            if dataset_config.get("process.observation.use"):
-                logger.info(f"start process {dataset_name} observation data")
-                if not dataset_config.get("process.observation.vibration.use"):
-                    random_range = 0
-                if not dataset_config.get("process.observation.noise.use"):
-                    noise_ratio = 0
-                logger.info(f"vibration random range: {random_range}, noise ratio: {noise_ratio}")
-                IA.get_observation(dataset_config.get("input.obs_path"), data_type, down_sample_factor, down_sample_strategy, x_sensor_position, y_sensor_position, random_range, noise_ratio)
+            # get observation data
+            if dataset_config.get("observation.use"):
+                observation_args = dataset_config.get_dict("observation.args")
+                processor.get_observation(**observation_args)
 
-            if dataset_config.get("process.interpolation.use"):
+            # interpolation data
+            if dataset_config.get("interpolation.use"):
                 logger.info(f"start process {dataset_name} interpolation data")
-                IA.interpolate(interp_shape[0], interp_shape[1], x_sensor_position, y_sensor_position, interp_method)
+                interpolate_args = dataset_config.get_dict("interpolation.args")
+                processor.interpolate(**interpolate_args)
+                if dataset_config.get("interpolation.save.use"):
+                    output_path = dataset_config.get_dict("interpolation.save.path")
+                    processor.save_interpolation(**output_path)
+            logger.info("====================================")
         else:
             logger.info(f"skip {dataset_name} data process")
+            logger.info("====================================")

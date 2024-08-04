@@ -42,14 +42,14 @@ class TestVoronoiInterpolation(unittest.TestCase):
                 },
                 "expected_output": np.array([
                     [
-                        [1, 2, 2],
-                        [1, 3, 3],
-                        [1, 3, 3]
+                        [1, 1, 1],
+                        [2, 1, 3],
+                        [2, 3, 3]
                     ],
                     [
-                        [4, 5, 5],
-                        [4, 6, 6],
-                        [4, 6, 6]
+                        [4, 4, 4],
+                        [5, 4, 6],
+                        [5, 6, 6]
                     ]
                 ]),
                 "error": None
@@ -89,16 +89,16 @@ class TestVoronoiInterpolation(unittest.TestCase):
                 },
                 "expected_output": np.array([
                     [
-                        [1, 2, 4],
-                        [4, 2, 2],
-                        [3, 4, 2],
-                        [3, 3, 3]
+                        [1, 1, 2],
+                        [1, 2, 2],
+                        [4, 2, 3],
+                        [4, 4, 3]
                     ],
                     [
-                        [5, 6, 8],
-                        [8, 6, 6],
-                        [7, 8, 6],
-                        [7, 7, 7]
+                        [5, 5, 6],
+                        [5, 6, 6],
+                        [8, 6, 7],
+                        [8, 8, 7]
                     ]
                 ]),
                 "error": None
@@ -128,14 +128,14 @@ class TestVoronoiInterpolation(unittest.TestCase):
                 },
                 "expected_output": np.array([
                     [
-                        [np.nan, np.nan, np.nan],
-                        [np.nan, 2.5, np.nan],
-                        [np.nan, np.nan, np.nan]
+                        [np.nan, 1, np.nan],
+                        [2, 2, np.nan],
+                        [np.nan, np.nan, 3]
                     ],
                     [
-                        [np.nan, np.nan, np.nan],
-                        [np.nan, 5.5, np.nan],
-                        [np.nan, np.nan, np.nan]
+                        [np.nan, 4, np.nan],
+                        [5, 5, np.nan],
+                        [np.nan, np.nan, 6]
                     ]
                 ]),
                 "error": None

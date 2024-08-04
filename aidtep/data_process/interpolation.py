@@ -44,8 +44,8 @@ class VoronoiInterpolator(Interpolator):
         sensor_positions = np.argwhere(sensor_position_mask == 1)
 
         # get grid points
-        x_grid = np.linspace(0, x_shape, x_shape)
-        y_grid = np.linspace(0, y_shape, y_shape)
+        x_grid = np.linspace(0, x_shape - 1, x_shape)
+        y_grid = np.linspace(0, y_shape - 1, y_shape)
         X, Y = np.meshgrid(x_grid, y_grid)
         grid_points = np.array([X.flatten(), Y.flatten()]).T
 
@@ -53,7 +53,7 @@ class VoronoiInterpolator(Interpolator):
 
         for i in range(n_sample):
             # voronoi tessellation
-            Z = griddata(sensor_positions, observations[i], grid_points, method='nearest').reshape(x_shape, y_shape)
+            Z = griddata(sensor_positions, observations[i], grid_points, method='nearest').reshape((y_shape, x_shape)).T
             interpolated_data[i] = Z
         return interpolated_data
 
@@ -77,15 +77,16 @@ class VoronoiInterpolatorLinear(Interpolator):
         sensor_positions = np.argwhere(sensor_position_mask == 1)
 
         # get grid points
-        x_grid = np.linspace(0, x_shape, x_shape)
-        y_grid = np.linspace(0, y_shape, y_shape)
+        x_grid = np.linspace(0, x_shape - 1, x_shape)
+        y_grid = np.linspace(0, y_shape - 1, y_shape)
         X, Y = np.meshgrid(x_grid, y_grid)
         grid_points = np.array([X.flatten(), Y.flatten()]).T
 
         interpolated_data = np.zeros((n_sample, x_shape, y_shape))
 
         for i in range(n_sample):
-            Z = griddata(sensor_positions, observations[i], grid_points, method='linear').reshape(x_shape, y_shape)
+            # voronoi tessellation
+            Z = griddata(sensor_positions, observations[i], grid_points, method='linear').reshape((y_shape, x_shape)).T
             interpolated_data[i] = Z
         return interpolated_data
 
