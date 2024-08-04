@@ -53,7 +53,7 @@ class AidtepConfig:
 
     def get_dict(self, key: str):
         value = self.get(key)
-        if not value:
+        if not value or value == "None":
             return {}
 
         if isinstance(value, AidtepConfig):
