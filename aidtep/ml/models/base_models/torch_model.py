@@ -1,4 +1,3 @@
-from typing import Literal, Optional
 import torch
 from loguru import logger
 from torch import nn
@@ -15,7 +14,7 @@ class PyTorchModel(BaseModel):
     """
 
     def __init__(self, model: nn.Module, criterion, optimizer, scheduler=None,
-                 device: Optional[Literal['cpu', 'cuda']] = None):
+                 device: torch.device = None):
         """
         :param model: PyTorch model
         :param criterion: Loss function

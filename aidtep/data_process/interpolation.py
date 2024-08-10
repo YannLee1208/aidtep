@@ -1,4 +1,4 @@
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 import numpy as np
 from loguru import logger
 from scipy.interpolate import griddata
@@ -6,7 +6,7 @@ from scipy.interpolate import griddata
 from aidtep.utils.common import Registry
 
 
-class Interpolator(Registry):
+class Interpolator(Registry, ABC):
     interpolator_mapping = {}
 
     @classmethod
