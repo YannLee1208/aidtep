@@ -8,10 +8,6 @@ class ModelRegistry(Registry, ABC):
     model_mapping = {}
 
     @classmethod
-    @abstractmethod
-    def name(cls):
-        pass
-    @classmethod
     def register(cls):
         cls.model_mapping[cls.name()] = cls
         # logger.info(f"Registering model {cls.__name__} '{cls.name()}'")
