@@ -1,5 +1,6 @@
-from typing import Optional, Literal
+from typing import Optional
 from loguru import logger
+import torch
 
 from aidtep.ml.criterion.L2 import L2Loss
 from aidtep.ml.processor.processor import Processor
@@ -24,7 +25,7 @@ class IAEAInverseBuilder:
         return self
 
     def build_model(self, model_type: str, criterion_type: str, optimizer_type: str, scheduler_type: str, lr: float,
-                    device: Optional[Literal['cpu', 'cuda']], criterion_args: Optional[dict] = None, optimizer_args: Optional[dict] = None, scheduler_args: Optional[dict] = None):
+                    device: torch.device, criterion_args: Optional[dict] = None, optimizer_args: Optional[dict] = None, scheduler_args: Optional[dict] = None):
         logger.info(f"Buiding model of type {model_type}, criterion {criterion_type}, optimizer {optimizer_type}, scheduler {scheduler_type}, lr {lr}")
         model = get_model_class(model_type)()
         criterion = get_criterion_class(criterion_type)(**criterion_args)

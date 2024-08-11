@@ -15,6 +15,7 @@ def parse_true_data_path(dataset_config: AidtepConfig):
     return data_path_format.format(data_type=data_type, down_sample_factor=down_sample_factor,
                                    down_sample_strategy=down_sample_strategy)
 
+
 def parse_output_data_path(dataset_config: AidtepConfig):
     obs_data_path_format = dataset_config.get("obs_data_path_format")
     intepolation_data_path_format = dataset_config.get("interpolation_data_path_format")
@@ -46,6 +47,7 @@ if __name__ == '__main__':
     for dataset_name in config_data_process.keys():
         dataset_config = config_data_process.get(dataset_name)
         if dataset_config.get("use"):
+            logger.info("====================================")
             true_data_path = parse_true_data_path(dataset_config)
             obs_output_path, interpolation_output_path = parse_output_data_path(dataset_config)
             logger.info(f"start process {dataset_name} data")
@@ -55,14 +57,14 @@ if __name__ == '__main__':
 
             processor = get_processor_class(dataset_name)(
                 true_data_path=true_data_path,
-                obs_output_path =obs_output_path,
+                obs_output_path=obs_output_path,
                 interpolation_output_path=interpolation_output_path
             )
 
             if dataset_config.get("raw_data.use"):
                 data_type = dataset_config.get("raw_data.data_type")
-                input_path = dataset_config.get_dict("raw_data.input")
-                processor.load_raw_data(data_type, **input_path)
+                raw_path = dataset_config.get_dict("raw_data.raw_path")
+                processor.load_raw_data(data_type, **raw_path)
 
                 down_sample_factor = dataset_config.get("raw_data.down_sample_factor")
                 down_sample_strategy = dataset_config.get("raw_data.down_sample_strategy")
@@ -85,7 +87,6 @@ if __name__ == '__main__':
                 if dataset_config.get("interpolation.save.use"):
                     output_path = dataset_config.get_dict("interpolation.save.path")
                     processor.save_interpolation(**output_path)
-            logger.info("====================================")
         else:
-            logger.info(f"skip {dataset_name} data process")
             logger.info("====================================")
+            logger.info(f"skip {dataset_name} data process")
