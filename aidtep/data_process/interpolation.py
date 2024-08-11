@@ -12,7 +12,7 @@ class Interpolator(Registry, ABC):
     @classmethod
     def register(cls):
         cls.interpolator_mapping[cls.name()] = cls
-        logger.info(f"Registering interpolation class  {cls.__name__} '{cls.name()}'")
+        logger.debug(f"Registering interpolation class  {cls.__name__} '{cls.name()}'")
 
     @classmethod
     def get(cls, name):
