@@ -61,8 +61,7 @@ if __name__ == '__main__':
             # TODO: general builder
             builder = IAEAForwardBuilder()
             builder.build_dataloaders(input_data_path, output_data_path, train_ratio, val_ratio, batch_size)
-
-            # build model
+            
             optimizer_type = dataset_config.get("train.optimizer.type")
             optimizer_args = dataset_config.get_dict("train.optimizer.args")
             criterion_type = dataset_config.get("criterion.type")
