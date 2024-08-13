@@ -1,0 +1,49 @@
+device: cuda:0
+random_seed: 42
+log:
+  dir: ../../log
+data_process:
+  Dataset1: 
+    use: true
+    true_data_path_format: ../../data/true_data/{data_type}_{down_sample_factor}_{down_sample_strategy}.npy
+    obs_data_path_format: ../../data/obs_data/{data_type}_{down_sample_factor}_{down_sample_strategy}_obs.npy
+    interpolation_data_path_format: ../../data/interpolation/{method}_{data_type}_{down_sample_factor}_{down_sample_strategy}.npy
+
+    raw_data:
+      use: true
+      data_type: float32
+      raw_path:
+        path: ../../data/raw/dataset1_raw_data.npy
+      down_sample:
+        use: true
+        down_sample_factor: 2
+        down_sample_strategy: mean
+      save:
+        use: true
+        args:
+          output_path: ../../data/processed/dataset1_down_sampled_data.npy
+
+    observation:
+      use: true
+      args:
+        x_sensor_position: [0, 10, 20, 30, 40, 50, 60, 70, 80, 85]
+        y_sensor_position: [0, 10, 20, 30, 40, 50, 60, 70, 80, 85]
+        random_range: 0.01
+        noise_ratio: 0.02
+
+    interpolation:
+      use: true
+      args:
+        method: linear
+        x_sensor_position: [0, 10, 20, 30, 40, 50, 60, 70, 80, 85]
+        y_sensor_position: [0, 10, 20, 30, 40, 50, 60, 70, 80, 85]
+        random_range: 0.01
+        noise_ratio: 0.02
+      save:
+        use: true
+        path:
+          output_path: ../../data/processed/dataset1_interpolated_data.npy
+
+  Dataset2:
+    use: false
+
