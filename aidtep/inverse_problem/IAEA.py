@@ -2,7 +2,7 @@ from typing import Optional
 from loguru import logger
 import torch
 
-from aidtep.ml.criterion.L2 import L2Loss
+from aidtep.ml.criterion.L2 import L2Loss, LinfLoss
 from aidtep.ml.processor.processor import Processor
 from aidtep.ml.models.base_models.torch_model import PyTorchModel
 from aidtep.ml.data.dataloader import create_dataloaders
@@ -25,8 +25,10 @@ class IAEAInverseBuilder:
         return self
 
     def build_model(self, model_type: str, criterion_type: str, optimizer_type: str, scheduler_type: str, lr: float,
-                    device: torch.device, criterion_args: Optional[dict] = None, optimizer_args: Optional[dict] = None, scheduler_args: Optional[dict] = None):
-        logger.info(f"Buiding model of type {model_type}, criterion {criterion_type}, optimizer {optimizer_type}, scheduler {scheduler_type}, lr {lr}")
+                    device: torch.device, criterion_args: Optional[dict] = None, optimizer_args: Optional[dict] = None,
+                    scheduler_args: Optional[dict] = None):
+        logger.info(
+            f"Buiding model of type {model_type}, criterion {criterion_type}, optimizer {optimizer_type}, scheduler {scheduler_type}, lr {lr}")
         model = get_model_class(model_type)()
         criterion = get_criterion_class(criterion_type)(**criterion_args)
         optimizer = get_optimizer_class(optimizer_type)(model.parameters(), lr=lr, **optimizer_args)
@@ -35,6 +37,9 @@ class IAEAInverseBuilder:
 
         logger.info("Adding l2 criterion")
         self.model.add_criteria("L2", L2Loss())
+
+        logger.info("Adding linf criterion")
+        self.model.add_criteria("Linf", LinfLoss())
 
         logger.info("Model built")
         return self
@@ -51,7 +56,6 @@ class IAEAInverseBuilder:
         return processor.test(self.test_loader)
 
 
-
 if __name__ == '__main__':
     # initialize(log_level=logging.DEBUG)
     # import torch
@@ -62,5 +66,6 @@ if __name__ == '__main__':
     model = get_model_class("NVT_ResNet")()
     optimizer = get_optimizer_class("adam")(model.parameters(), lr=0.001)
     import torch
+
     print(loss(torch.Tensor([1, 2, 3]), torch.Tensor([1, 2, 2])))
     print(optimizer)
