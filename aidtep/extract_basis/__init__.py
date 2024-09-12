@@ -1,6 +1,8 @@
 import os
 from abc import ABC, abstractmethod
 
+import torch
+
 from aidtep.utils.common import Registry, import_modules
 
 
@@ -9,6 +11,22 @@ class BasisExtractorRegistry(Registry, ABC):
 
     @abstractmethod
     def extract(self, *args, **kwargs):
+        pass
+
+    @abstractmethod
+    def get_basis(self) -> torch.Tensor:
+        """
+        Get the basis extracted from the full matrix
+        :return: basis matrix, shape (n_basis, n_features)
+        """
+        pass
+
+    @abstractmethod
+    def get_basis_importance(self) -> torch.Tensor:
+        """
+        Get the importance of each basis
+        :return: importance of each basis, shape (n_basis,)
+        """
         pass
 
     @classmethod
