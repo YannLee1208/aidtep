@@ -68,8 +68,7 @@ if __name__ == '__main__':
 
                 down_sample_factor = dataset_config.get("raw_data.down_sample_factor")
                 down_sample_strategy = dataset_config.get("raw_data.down_sample_strategy")
-                if dataset_config.get("raw_data.down_sample.use"):
-                    processor.down_sample_raw_data(down_sample_factor, down_sample_strategy)
+                processor.down_sample_raw_data(down_sample_factor, down_sample_strategy)
                 if dataset_config.get("raw_data.save.use"):
                     output_args = dataset_config.get_dict("raw_data.save.args")
                     processor.save_raw_data(data_type, down_sample_factor, down_sample_strategy, **output_args)
