@@ -33,11 +33,11 @@ class PyTorchModel(BaseModel):
         self.criterion = criterion.to(self.device)
         self.optimizer = optimizer
 
-        self.additional_criterions = {}
+        self.additional_criteria = {}
         self.progress_logger = ProgressLogger()
 
     def add_criteria(self, name, criterion):
-        self.additional_criterions[name] = criterion
+        self.additional_criteria[name] = criterion
 
     def train(self, dataloader: DataLoader, progress_prefix: str = "", **kwargs) -> float:
         """
@@ -61,7 +61,7 @@ class PyTorchModel(BaseModel):
 
             with torch.no_grad():
                 criterion_losses = {"train_loss": loss.item()}
-                for name, criterion in self.additional_criterions.items():
+                for name, criterion in self.additional_criteria.items():
                     criterion_losses[name] = criterion(outputs, targets).item()
                 self.progress_logger.log_batch(progress_prefix, idx + 1, batch_number, criterion_losses)
         self.progress_logger.finalize_log()
@@ -100,7 +100,7 @@ class PyTorchModel(BaseModel):
                 total_loss += loss.item()
 
                 criterion_losses = {"test_loss": loss.item()}
-                for name, criterion in self.additional_criterions.items():
+                for name, criterion in self.additional_criteria.items():
                     criterion_losses[name] = criterion(outputs, batch_y).item()
                 self.progress_logger.log_batch(progress_prefix, idx + 1, batch_number, criterion_losses)
             self.progress_logger.finalize_log()
