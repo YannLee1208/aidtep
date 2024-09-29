@@ -18,7 +18,7 @@ def parse_true_data_path(dataset_config: AidtepConfig):
 
 def parse_output_data_path(dataset_config: AidtepConfig):
     obs_data_path_format = dataset_config.get("obs_data_path_format")
-    intepolation_data_path_format = dataset_config.get("interpolation_data_path_format")
+    interpolation_data_path_format = dataset_config.get("interpolation_data_path_format")
     data_type = dataset_config.get("raw_data.data_type")
     down_sample_factor = dataset_config.get("raw_data.down_sample_factor")
     down_sample_strategy = dataset_config.get("raw_data.down_sample_strategy")
@@ -31,7 +31,7 @@ def parse_output_data_path(dataset_config: AidtepConfig):
                                        down_sample_strategy=down_sample_strategy,
                                        x_sensor_position=x_sensor_position, y_sensor_position=y_sensor_position,
                                        random_range=random_range, noise_ratio=noise_ratio), \
-        intepolation_data_path_format.format(method=interpolation_method, data_type=data_type,
+        interpolation_data_path_format.format(method=interpolation_method, data_type=data_type,
                                              down_sample_factor=down_sample_factor,
                                              down_sample_strategy=down_sample_strategy,
                                              x_sensor_position=x_sensor_position, y_sensor_position=y_sensor_position,
@@ -68,8 +68,7 @@ if __name__ == '__main__':
 
                 down_sample_factor = dataset_config.get("raw_data.down_sample_factor")
                 down_sample_strategy = dataset_config.get("raw_data.down_sample_strategy")
-                if dataset_config.get("raw_data.down_sample.use"):
-                    processor.down_sample_raw_data(down_sample_factor, down_sample_strategy)
+                processor.down_sample_raw_data(down_sample_factor, down_sample_strategy)
                 if dataset_config.get("raw_data.save.use"):
                     output_args = dataset_config.get_dict("raw_data.save.args")
                     processor.save_raw_data(data_type, down_sample_factor, down_sample_strategy, **output_args)

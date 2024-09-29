@@ -14,10 +14,10 @@ from aidtep.ml.processor.processor import Processor
 from aidtep.ml.scheduler import get_scheduler_class
 
 
-class IAEAInverseBuilder(InverseBuilder):
+class NOAAInverseBuilder(InverseBuilder):
     @classmethod
     def name(cls):
-        return "IAEA"
+        return "NOAA"
 
     def build_dataloaders(
         self,

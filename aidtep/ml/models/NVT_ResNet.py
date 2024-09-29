@@ -34,7 +34,7 @@ class NVT_ResNet(nn.Module, ModelRegistry):
 
     @classmethod
     def name(cls):
-        return 'NVT_ResNet'
+        return 'NVT-ResNet'
 
     def __init__(self, block=BasicBlock, layers=None):
         super(NVT_ResNet, self).__init__()
@@ -79,3 +79,15 @@ class NVT_ResNet(nn.Module, ModelRegistry):
         x = self.final_conv(x)
 
         return x
+
+
+if __name__ == '__main__':
+    model = NVT_ResNet()
+    # 打模模型大小和参数数量
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f'Total trainable parameters: {total_params}')
+
+    param_size = sum(p.numel() * p.element_size() for p in model.parameters())
+    buffer_size = sum(b.numel() * b.element_size() for b in model.buffers())
+    total_size = param_size + buffer_size
+    print(f'Total size of parameters and buffers: {total_size} bytes')
