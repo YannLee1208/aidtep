@@ -37,7 +37,7 @@ inverse:
 
   NOAA:
     use: true
-    input_path: ../../data/processed/NOAA/interpolation_voronoi_float64_1_mean_vib_0_noise_0.0_[0, 20, 40, 60, 80, 100, 120, 140, 160]_[0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340].npy
+    input_path: ../../data/processed/NOAA/obs_float64_1_mean_vib_0_noise_0.0_[0, 20, 40, 60, 80, 100, 120, 140, 160]_[0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340].npy
     predict_path: ../../data/processed/NOAA/NOAA_float64_1_mean.npy
     train_ratio: 0.85
     val_ratio: 0.05
@@ -46,11 +46,15 @@ inverse:
       type: mse
     model:
       overwrite: true # if overwrite the previous pth
-      type: EIM-NN¬
+      type: EIM-NN
       path: ../../data/model_weights/NOAA/{output}/{type}_{input}.pth
+      args:
+        basis_path: ../../data/extract_basis/NOAA/SVD_base_number_10.npz
+        x_shape: 180
+        y_shape: 360
     train:
       use: true
-      lr: 0.005
+      lr: 0.1
       epochs: 100
       optimizer:
         type: adam
