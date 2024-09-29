@@ -1,9 +1,9 @@
 from abc import abstractmethod
+from pathlib import Path
 
 import numpy as np
 import torch
 from loguru import logger
-from pathlib import Path
 
 from aidtep.extract_basis import BasisExtractorRegistry
 
@@ -13,13 +13,16 @@ class BaseEIM(BasisExtractorRegistry):
     def name(cls):
         return "EIM"
 
-    def __init__(self, base_number: int, device: torch.device, measure_matrix: np.ndarray):
+    def __init__(
+        self, base_number: int, device: torch.device, measure_matrix: np.ndarray
+    ):
         """
         Args:
             base_number (int): number of bases
             device (torch.device): device to run the algorithm
             measure_matrix (np.ndarray): measurement matrix, shape is (sensor_count, full_count)
         """
+        super(BaseEIM).__init__(device)
         self._count = None
         self._residual = None
         self._obs_residual = None
@@ -34,14 +37,20 @@ class BaseEIM(BasisExtractorRegistry):
         full_matrix = full_matrix.to(self.device)
         obs_matrix = obs_matrix.to(self.device)
 
-        interpolation = torch.zeros_like(full_matrix, device=self.device, dtype=obs_matrix.dtype)
-        self._Q = torch.zeros([full_matrix.shape[0], self.base_number], device=self.device, dtype=obs_matrix.dtype)
+        interpolation = torch.zeros_like(
+            full_matrix, device=self.device, dtype=obs_matrix.dtype
+        )
+        self._Q = torch.zeros(
+            [full_matrix.shape[0], self.base_number],
+            device=self.device,
+            dtype=obs_matrix.dtype,
+        )
         self._X = torch.zeros([self.base_number], device=self.device, dtype=torch.long)
 
         self._count = 0
 
         while self._count < self.base_number:
-            self._residual = (full_matrix - interpolation)
+            self._residual = full_matrix - interpolation
             self._obs_residual = self._get_observation(self._residual)
 
             mu = self._find_mu()
@@ -67,7 +76,7 @@ class BaseEIM(BasisExtractorRegistry):
         logger.info(f"count = {self._count}, fij = {self.errors}")
 
     def _get_observation(self, matrix: torch.Tensor) -> torch.Tensor:
-        """ Calculate the observation matrix from the full matrix based on the linear measurement matrix L. Equation is y = L @ x.
+        """Calculate the observation matrix from the full matrix based on the linear measurement matrix L. Equation is y = L @ x.
 
         Args:
             matrix (torch.Tensor): the full matrix
@@ -79,7 +88,7 @@ class BaseEIM(BasisExtractorRegistry):
 
     @abstractmethod
     def _find_mu(self) -> torch.Tensor:
-        """ Find the column index with the largest norm of the residual matrix.
+        """Find the column index with the largest norm of the residual matrix.
 
         Returns:
             torch.Tensor: mu, the column index
@@ -88,7 +97,7 @@ class BaseEIM(BasisExtractorRegistry):
 
     @abstractmethod
     def _find_x(self, mu: torch.Tensor) -> torch.Tensor:
-        """ Find the row index with the largest absolute value of the measurement residual.
+        """Find the row index with the largest absolute value of the measurement residual.
 
         Args:
             mu (torch.Tensor): the column index
@@ -99,7 +108,7 @@ class BaseEIM(BasisExtractorRegistry):
         pass
 
     def _cal_qi(self, mu: torch.Tensor, x: torch.Tensor) -> torch.Tensor:
-        """ Calculate the ith column of the Q matrix.
+        """Calculate the ith column of the Q matrix.
 
         Args:
             mu (torch.Tensor): the column index
@@ -129,8 +138,8 @@ class BaseEIM(BasisExtractorRegistry):
 
         # if has the attribute self._count
         if hasattr(self, "_count"):
-            Q = self._Q[:, :self._count]  # shape: full_count * base_number
-            X = self._X[:self._count]
+            Q = self._Q[:, : self._count]  # shape: full_count * base_number
+            X = self._X[: self._count]
         else:
             Q = self._Q
             X = self._X
@@ -149,8 +158,8 @@ class BaseEIM(BasisExtractorRegistry):
     def get_alpha(self, obs_matrix):
         obs_matrix = obs_matrix.to(self.device)
         if hasattr(self, "_count"):
-            Q = self._Q[:, :self._count]  # shape: full_count * base_number
-            X = self._X[:self._count]
+            Q = self._Q[:, : self._count]  # shape: full_count * base_number
+            X = self._X[: self._count]
         else:
             Q = self._Q
             X = self._X
@@ -166,18 +175,19 @@ class BaseEIM(BasisExtractorRegistry):
 
     def save(self, model_path):
         """
-            store self._L, self._Q, self._X
+        store self._L, self._Q, self._X
         """
         if not Path(model_path).parent.exists():
             Path(model_path).parent.mkdir(parents=True)
 
         torch.save(
-            [self._L, self._Q[:, :self._count], self._X[:self._count], self.errors], model_path
+            [self._L, self._Q[:, : self._count], self._X[: self._count], self.errors],
+            model_path,
         )
 
     def load(self, model_path):
         """
-            load self._L, self._Q, self._X
+        load self._L, self._Q, self._X
         """
 
         [self._L, self._Q, self._X, self.errors] = torch.load(model_path)
@@ -192,12 +202,16 @@ class EIM3(BaseEIM):
     def name(cls):
         return "EIM3"
 
-    def __init__(self, base_number: int, device: torch.device, measure_matrix: np.ndarray,  t=0):
+    def __init__(
+        self, base_number: int, device: torch.device, measure_matrix: np.ndarray, t=0
+    ):
         super().__init__(base_number, device, measure_matrix)
         self.t = t
 
     def _find_mu(self) -> torch.Tensor:
-        max_index = torch.argmax(torch.abs(self._obs_residual))  # 按照linf norm找出mu, x
+        max_index = torch.argmax(
+            torch.abs(self._obs_residual)
+        )  # 按照linf norm找出mu, x
         col_index = max_index % self._residual.shape[1]
         return col_index
 
@@ -208,8 +222,8 @@ class EIM3(BaseEIM):
 
     def cal_M(self):
         if hasattr(self, "_count"):
-            Q = self._Q[:, :self._count]  # shape: full_count * base_number
-            X = self._X[:self._count]
+            Q = self._Q[:, : self._count]  # shape: full_count * base_number
+            X = self._X[: self._count]
         else:
             Q = self._Q
             X = self._X
@@ -223,8 +237,8 @@ class EIM3(BaseEIM):
     def test(self, obs_matrix: torch.Tensor):
         obs_matrix = obs_matrix.to(self.device)
         if hasattr(self, "_count"):
-            Q = self._Q[:, :self._count]  # shape: full_count * base_number
-            X = self._X[:self._count]
+            Q = self._Q[:, : self._count]  # shape: full_count * base_number
+            X = self._X[: self._count]
         else:
             Q = self._Q
             X = self._X
@@ -274,8 +288,8 @@ def position_mask_to_measure_matrix(position_mask: np.ndarray) -> np.ndarray:
     return measure_matrix
 
 
-if __name__ == '__main__':
-    from aidtep.data_process.sensor_position import generate_2d_specific_mask
+if __name__ == "__main__":
+    from aidtep.data_process.component.sensor_position import generate_2d_specific_mask
     import numpy as np
     import torch
     import matplotlib.pyplot as plt
@@ -283,9 +297,30 @@ if __name__ == '__main__':
     x_shape = 180
     y_shape = 360
     x_sensor_position = [0, 20, 40, 60, 80, 100, 120, 140, 160]
-    y_sensor_position = [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340]
+    y_sensor_position = [
+        0,
+        20,
+        40,
+        60,
+        80,
+        100,
+        120,
+        140,
+        160,
+        180,
+        200,
+        220,
+        240,
+        260,
+        280,
+        300,
+        320,
+        340,
+    ]
 
-    position_mask = generate_2d_specific_mask(x_shape, y_shape, x_sensor_position, y_sensor_position)
+    position_mask = generate_2d_specific_mask(
+        x_shape, y_shape, x_sensor_position, y_sensor_position
+    )
     print(position_mask.shape)
     measure_matrix = position_mask_to_measure_matrix(position_mask)
     print(measure_matrix.shape)
@@ -306,5 +341,3 @@ if __name__ == '__main__':
     print(err)
     plt.imshow(prediction[0].reshape(x_shape, y_shape))
     plt.savefig("test.png")
-
-

@@ -1,0 +1,13 @@
+device: cuda:0
+random_seed: 0
+log:
+  dir: ../../log/extract_basis
+extract_basis:
+  NOAA:
+    use: true
+    input_path: ../../data/processed/NOAA/NOAA_float64_1_mean.npy
+    method: SVD
+    parameters:
+      base_number: 10
+    output_path: ../../data/extract_basis/NOAA/{method}_{parameters}
+
