@@ -64,6 +64,7 @@ if __name__ == "__main__":
             )
 
             # build model
+            model_args = dataset_config.get_dict("model.args")
             optimizer_type = dataset_config.get("train.optimizer.type")
             optimizer_args = dataset_config.get_dict("train.optimizer.args")
             criterion_type = dataset_config.get("criterion.type")
@@ -72,6 +73,7 @@ if __name__ == "__main__":
             scheduler_args = dataset_config.get_dict("train.scheduler.args")
             builder.build_model(
                 model_type=model_type,
+                model_args=model_args,
                 criterion_type=criterion_type,
                 criterion_args=criterion_args,
                 optimizer_type=optimizer_type,

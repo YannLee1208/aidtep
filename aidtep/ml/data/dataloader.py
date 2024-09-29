@@ -2,8 +2,8 @@ from typing import Any
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader, random_split, Dataset
 from loguru import logger
+from torch.utils.data import DataLoader, random_split, Dataset
 
 from aidtep.utils.file import check_file_exist
 
@@ -18,13 +18,18 @@ class CustomDataset(Dataset):
         return self.data_size
 
     def __getitem__(self, idx):
-        x = torch.from_numpy(self.x_data[idx]).unsqueeze(0).float()
-        y = torch.from_numpy(self.y_data[idx]).unsqueeze(0).float()
+        x = torch.from_numpy(self.x_data[idx]).unsqueeze(0)
+        y = torch.from_numpy(self.y_data[idx]).unsqueeze(0)
         return x, y
 
 
-def create_dataloaders(x_data_path: str, y_data_path: str, train_ratio: float, val_ratio: float, batch_size: int) -> tuple[
-    DataLoader[Any], DataLoader[Any], DataLoader[Any]]:
+def create_dataloaders(
+    x_data_path: str,
+    y_data_path: str,
+    train_ratio: float,
+    val_ratio: float,
+    batch_size: int,
+) -> tuple[DataLoader[Any], DataLoader[Any], DataLoader[Any]]:
     """
     Create torch Dataloader from ndarray, split by train_ratio and val_ratio
     :param x_data_path: str, path of model input data, end with .npy
@@ -32,7 +37,6 @@ def create_dataloaders(x_data_path: str, y_data_path: str, train_ratio: float, v
     :param train_ratio: float, ratio of training data
     :param val_ratio: float, ratio of validation data
     :param batch_size: int, batch size
-    :param seed: int, random seed
     :return: tuple[DataLoader, DataLoader, DataLoader], train_loader, val_loader, test_loader
     """
     if not check_file_exist(x_data_path) or not check_file_exist(y_data_path):
@@ -49,7 +53,9 @@ def create_dataloaders(x_data_path: str, y_data_path: str, train_ratio: float, v
     val_size = int(val_ratio * total_size)
     test_size = total_size - train_size - val_size
 
-    train_dataset, val_dataset, test_dataset = random_split(dataset, [train_size, val_size, test_size])
+    train_dataset, val_dataset, test_dataset = random_split(
+        dataset, [train_size, val_size, test_size]
+    )
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
@@ -72,8 +78,9 @@ if __name__ == "__main__":
     batch_size = 32
     seed = 42
 
-    train_loader, val_loader, test_loader = create_dataloaders(observation_path, output_path
-                                                               , train_ratio,val_ratio, batch_size, seed)
+    train_loader, val_loader, test_loader = create_dataloaders(
+        observation_path, output_path, train_ratio, val_ratio, batch_size, seed
+    )
 
     print(len(train_loader))
     print(len(val_loader))
