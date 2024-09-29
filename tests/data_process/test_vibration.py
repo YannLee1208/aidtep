@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from aidtep.data_process.vibration import generate_vibrated_masks
+from aidtep.data_process.component.vibration import generate_vibrated_masks
 
 
 class TestGenerateVibratedMasks(unittest.TestCase):
@@ -12,57 +12,45 @@ class TestGenerateVibratedMasks(unittest.TestCase):
             {
                 "name": "normal_case",
                 "input": {
-                    "sensor_position_mask": np.array([
-                        [0, 0, 0, 0],
-                        [0, 1, 0, 0],
-                        [0, 0, 0, 0],
-                        [0, 0, 0, 1]
-                    ]),
+                    "sensor_position_mask": np.array(
+                        [[0, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1]]
+                    ),
                     "random_range": 1,
-                    "n": 3
+                    "n": 3,
                 },
                 "expected_output_shape": (3, 4, 4),
-                "error": None
+                "error": None,
             },
             {
                 "name": "no_sensors",
                 "input": {
                     "sensor_position_mask": np.zeros((4, 4), dtype=int),
                     "random_range": 1,
-                    "n": 3
+                    "n": 3,
                 },
                 "expected_output_shape": (3, 4, 4),
                 "expected_output": np.zeros((3, 4, 4), dtype=int),
-                "error": None
+                "error": None,
             },
             {
                 "name": "single_sensor",
                 "input": {
-                    "sensor_position_mask": np.array([
-                        [0, 0, 0],
-                        [0, 1, 0],
-                        [0, 0, 0]
-                    ]),
+                    "sensor_position_mask": np.array([[0, 0, 0], [0, 1, 0], [0, 0, 0]]),
                     "random_range": 0,
-                    "n": 2
+                    "n": 2,
                 },
-                "error": ValueError
-
+                "error": ValueError,
             },
             {
                 "name": "invalid_random_range",
                 "input": {
-                    "sensor_position_mask": np.array([
-                        [0, 0, 0],
-                        [0, 1, 0],
-                        [0, 0, 0]
-                    ]),
+                    "sensor_position_mask": np.array([[0, 0, 0], [0, 1, 0], [0, 0, 0]]),
                     "random_range": -1,
-                    "n": 2
+                    "n": 2,
                 },
                 "expected_output": None,
-                "error": ValueError
-            }
+                "error": ValueError,
+            },
         ]
 
     def test_generate_vibrated_masks(self):
