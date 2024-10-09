@@ -1,12 +1,12 @@
-device: cuda:0
+device: cuda:1
 random_seed: 0
 log:
   dir: ../../log/inverse_problem
 inverse:
   IAEA:
-    use: false
-    input_path:  ../../data/processed/IAEA/interpolation_voronoi_float16_2_mean_vib_0_noise_0.0_[0, 10, 20, 30, 40, 50, 60, 70, 80, 85]_[0, 10, 20, 30, 40, 50, 60, 70, 80, 85].npy
-    predict_path: ../../data/processed/IAEA/phione_float16_2_mean.npy
+    use: true
+    input_path:  ../../data/processed/IAEA/interpolation_voronoi_vib_0_noise_0.0_[0, 10, 20, 30, 40, 50, 60, 70, 80, 85]_[0, 10, 20, 30, 40, 50, 60, 70, 80, 85].npy
+    predict_path: ../../data/processed/IAEA/phione.npy
     train_ratio: 0.85
     val_ratio: 0.05
     batch_size: 64
@@ -17,7 +17,7 @@ inverse:
       type: NVT-ResNet
       path: ../../data/model_weights/IAEA/{output}/{type}_{input}.pth
     train:
-      use: false
+      use: true
       lr: 0.005
       epochs: 100
       optimizer:
@@ -31,12 +31,9 @@ inverse:
           step_size: 50
     test:
       use: true
-      model_path: # Case when using different data for training and testing.
-        use: true #  means use this model_path instead of the model_path in model.
-        path: ../../data/model_weights/IAEA/phione_float16_2_mean/NVT-ResNet_interpolation_voronoi_float16_2_mean_vib_0_noise_0.0_[0, 10, 20, 30, 40, 50, 60, 70, 80, 85]_[0, 10, 20, 30, 40, 50, 60, 70, 80, 85].pth
 
   NOAA:
-    use: true
+    use: false
     input_path: ../../data/processed/NOAA/obs_float64_1_mean_vib_0_noise_0.0_[0, 20, 40, 60, 80, 100, 120, 140, 160]_[0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340].npy
     predict_path: ../../data/processed/NOAA/NOAA_float64_1_mean.npy
     train_ratio: 0.85
@@ -67,9 +64,6 @@ inverse:
           step_size: 50
     test:
       use: true
-      model_path: # Case when using different data for training and testing.
-        use: false #  means use this model_path instead of the model_path in model.
-        path: ../../data/model_weights/NOAA
 
 
 
