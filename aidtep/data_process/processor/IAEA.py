@@ -33,7 +33,6 @@ class IAEADataProcessor(DataProcessor):
 
     def load_raw_data(
         self,
-        data_type: str,
         data_path: str,
         phione_path: str,
         phitwo_path: str,
@@ -41,7 +40,6 @@ class IAEADataProcessor(DataProcessor):
     ):
         """
         Load IAEA raw data from txt file.
-        :param data_type: str, data type of the raw data
         :param data_path: str, data path
         :param phione_path: str, phi one input path
         :param phitwo_path: str, phi two input path
@@ -58,7 +56,6 @@ class IAEADataProcessor(DataProcessor):
             raise ValueError("Please provide all the input files.")
         for file_path in [phione_path, phitwo_path, power_path]:
             data = np.loadtxt(file_path)
-            data = data.astype(data_type)
             data = data.reshape(constants.IAEA_DATA_SIZE, *constants.IAEA_DATA_SHAPE)
             self.raw_data_list.append(data)
             logger.debug(f"{file_path}: raw data shape: {data.shape}")
@@ -101,9 +98,6 @@ class IAEADataProcessor(DataProcessor):
 
     def save_raw_data(
         self,
-        data_type: str,
-        down_sample_factor: int,
-        down_sample_strategy: Literal["min", "max", "mean"],
         phione_path: str,
         phitwo_path: str,
         power_path: str,
@@ -115,13 +109,10 @@ class IAEADataProcessor(DataProcessor):
         :param phitwo_path: str, phi two output path
         :param power_path: str, power output path
         """
+        self.down_sample_raw_data(2, "mean")
         for file_path in [phione_path, phitwo_path, power_path]:
             save_ndarray(
-                file_path.format(
-                    data_type=data_type,
-                    down_sample_factor=down_sample_factor,
-                    down_sample_strategy=down_sample_strategy,
-                ),
+                file_path,
                 self.raw_data_list.pop(0),
             )
 
