@@ -30,10 +30,9 @@ class NOAADataProcessor(DataProcessor):
         self.observation = None
         self.raw_data = None
 
-    def load_raw_data(self, data_type: str, data_path: str):
+    def load_raw_data(self, data_path: str):
         """
         Load IAEA raw data from txt file.
-        :param data_type: str, data type of the raw data
         :param data_path: str, data path
         """
         if not check_file_exist(data_path):
@@ -43,7 +42,7 @@ class NOAADataProcessor(DataProcessor):
         lon = np.array(f["lon"]).squeeze()
         height, width = lat.shape[0], lon.shape[0]
         raw_data = np.nan_to_num(np.array(f["sst"])).reshape((-1, width, height))
-        self.raw_data = np.swapaxes(raw_data, 1, 2)[:, ::-1, :].astype(data_type)
+        self.raw_data = np.swapaxes(raw_data, 1, 2)[:, ::-1, :]
         logger.debug(f"NOAA raw data shape: {self.raw_data.shape}")
 
     def down_sample_raw_data(
@@ -72,15 +71,9 @@ class NOAADataProcessor(DataProcessor):
 
     def save_raw_data(
         self,
-        data_type: str,
-        down_sample_factor: int,
-        down_sample_strategy: Literal["min", "max", "mean"],
     ):
         """
         Save the down sampled raw data to a file.
-        :param down_sample_strategy: str, down sample strategy
-        :param down_sample_factor: int, down sample factor
-        :param data_type: str, data type of the raw data
         """
         logger.debug(f"Saving NOAA raw data to {self.true_data_path}")
         save_ndarray(self.true_data_path, self.raw_data)

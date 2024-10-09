@@ -4,15 +4,12 @@ log:
   dir: ../../log/data_process
 data_process:
   IAEA:
-    use: false
-    true_data_path_format: ../../data/processed/IAEA/phitwo_{data_type}_{down_sample_factor}_{down_sample_strategy}.npy
-    obs_data_path_format: ../../data/processed/IAEA/obs_{data_type}_{down_sample_factor}_{down_sample_strategy}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
-    interpolation_data_path_format: ../../data/processed/IAEA/interpolation_{method}_{data_type}_{down_sample_factor}_{down_sample_strategy}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+    use: true
+    true_data_path: ../../data/processed/IAEA/phitwo.npy
+    obs_data_path_format: ../../data/processed/IAEA/obs_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+    interpolation_data_path_format: ../../data/processed/IAEA/interpolation_{method}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
     raw_data:
-      use: true
-      data_type: float16
-      down_sample_factor: 2
-      down_sample_strategy: mean
+      use: false
       raw_path:
         data_path: /home/sda/data/IAEA/phitwo1.txt
         phione_path: /home/sda/data/IAEA/phione1.txt
@@ -21,34 +18,31 @@ data_process:
       save:
         use: true
         args:
-          phione_path: ../../data/processed/IAEA/phione_{data_type}_{down_sample_factor}_{down_sample_strategy}.npy
-          phitwo_path: ../../data/processed/IAEA/phitwo_{data_type}_{down_sample_factor}_{down_sample_strategy}.npy
-          power_path: ../../data/processed/IAEA/power_{data_type}_{down_sample_factor}_{down_sample_strategy}.npy
+          phione_path: ../../data/processed/IAEA/phione.npy
+          phitwo_path: ../../data/processed/IAEA/phitwo.npy
+          power_path: ../../data/processed/IAEA/power.npy
     observation:
-      use: false
+      use: true
       args:
         x_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
         y_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
         random_range: 0
         noise_ratio: 0.0
     interpolation:
-      use: false
+      use: true
       args:
-        method: voronoi_v1
+        method: voronoi
         x_shape: 86
         y_shape: 86
         x_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
         y_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]
   NOAA:
-    use: true
-    true_data_path_format: ../../data/processed/NOAA/NOAA_{data_type}_{down_sample_factor}_{down_sample_strategy}.npy
-    obs_data_path_format: ../../data/processed/NOAA/obs_{data_type}_{down_sample_factor}_{down_sample_strategy}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
-    interpolation_data_path_format: ../../data/processed/NOAA/interpolation_{method}_{data_type}_{down_sample_factor}_{down_sample_strategy}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+    use: false
+    true_data_path: ../../data/processed/NOAA/NOAA.npy
+    obs_data_path_format: ../../data/processed/NOAA/obs_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+    interpolation_data_path_format: ../../data/processed/NOAA/interpolation_{method}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
     raw_data:
       use: true
-      data_type: float64
-      down_sample_factor: 1
-      down_sample_strategy: mean
       raw_path:
         data_path: /home/sda/data/NOAA/sst_weekly.mat
       save:
@@ -62,7 +56,7 @@ data_process:
         random_range: 1
         noise_ratio: 0.0
     interpolation:
-      use: false
+      use: true
       args:
         method: voronoi
         x_shape: 180
@@ -72,14 +66,11 @@ data_process:
 
   Corcasim:
     use: false
-    true_data_path_format: ../../data/processed/Corcasim/Corcasim_{data_type}_{down_sample_factor}_{down_sample_strategy}.npy
-    obs_data_path_format: ../../data/processed/Corcasim/obs_{data_type}_{down_sample_factor}_{down_sample_strategy}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
-    interpolation_data_path_format: ../../data/processed/Corcasim/interpolation_{method}_{data_type}_{down_sample_factor}_{down_sample_strategy}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+    true_data_path: ../../data/processed/Corcasim/Corcasim.npy
+    obs_data_path_format: ../../data/processed/Corcasim/obs_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+    interpolation_data_path_format: ../../data/processed/Corcasim/interpolation_{method}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
     raw_data:
       use: true
-      data_type: float32
-      down_sample_factor: 1
-      down_sample_strategy: mean
       raw_path:
         data_path_10000: /home/sda/data/Corcasim/powerIAEA10000.txt
         data_path_8480: /home/sda/data/Corcasim/powerIAEA8480.txt
