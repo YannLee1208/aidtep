@@ -1,5 +1,9 @@
 import logging
 import os
+import sys
+
+sys.path.append('/home/sda/aidtep/aidtep')
+
 
 from aidtep.inverse_problem import get_builder_class
 from aidtep.utils.config import AidtepConfig
@@ -7,7 +11,7 @@ from aidtep.utils.initialize import initialize
 
 
 def parse_model_path(
-    model_path_format: str, input_data_path: str, output_data_path: str, model_type: str
+    model_path_format: str, input_data_path: str, output_data_path: str, model_type: str 
 ) -> str:
     """
     Parse model path with input data path, output data path and model type
@@ -34,8 +38,16 @@ if __name__ == "__main__":
         log_dir=config.get("log.dir"),
         log_level=logging.DEBUG,
     )
+  # 添加调试信息，检查配置是否加载正确
+    print("Loaded configuration:", config)
+
 
     config_inverse = config.get("inverse")
+    print("Inverse configuration:", config_inverse)
+
+    if config_inverse is None:
+        raise ValueError("The inverse configuration is not loaded properly.")
+
     for dataset_name in config_inverse.keys():
         dataset_config = config_inverse.get(dataset_name)
         if dataset_config.get("use"):

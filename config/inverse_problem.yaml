@@ -4,7 +4,7 @@ log:
   dir: ../../log/inverse_problem
 inverse:
   IAEA:
-    use: true
+    use: false
     input_path:  ../../data/processed/IAEA/interpolation_voronoi_vib_0_noise_0.0_[0, 10, 20, 30, 40, 50, 60, 70, 80, 85]_[0, 10, 20, 30, 40, 50, 60, 70, 80, 85].npy
     predict_path: ../../data/processed/IAEA/phione.npy
     train_ratio: 0.85
@@ -17,7 +17,7 @@ inverse:
       type: NVT-ResNet
       path: ../../data/model_weights/IAEA/{output}/{type}_{input}.pth
     train:
-      use: true
+      use: false
       lr: 0.005
       epochs: 100
       optimizer:
@@ -65,6 +65,34 @@ inverse:
     test:
       use: true
 
-
+inverse:
+  Corcasim:
+    use: true 
+    input_path: /home/sda/aidtep/aidtep/data/processed/Corcasim/target_average_powerIAEA10000.npy
+    predict_path: /home/sda/aidtep/aidtep/data/processed/Corcasim/target_average_predictions10000.npy
+    train_ratio: 0.85
+    val_ratio: 0.05
+    batch_size: 64
+    criterion:
+      type: mse
+    model:
+      overwrite: true
+      type: NVT-ResNet
+      path: ../../data/model_weights/Corcasim/{output}/{type}_{input}.pth
+    train:
+      use: true
+      lr: 0.005
+      epochs: 100
+      optimizer:
+        type: adam
+        args:
+          weight_decay: 0.0001
+      scheduler:
+        type: step_lr
+        args:
+          gamma: 0.05
+          step_size: 50
+    test:
+      use: true
 
 

@@ -4,7 +4,7 @@ log:
   dir: ../../log/data_process
 data_process:
   IAEA:
-    use: true
+    use: false
     true_data_path: ../../data/processed/IAEA/phitwo.npy
     obs_data_path_format: ../../data/processed/IAEA/obs_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
     interpolation_data_path_format: ../../data/processed/IAEA/interpolation_{method}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
@@ -64,23 +64,54 @@ data_process:
         x_sensor_position: [ 0, 20, 40, 60, 80, 100, 120, 140, 160 ]
         y_sensor_position: [ 0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340 ]
 
+  # Corcasim:
+  #   use: false
+  #   true_data_path: ../../data/processed//Corcasim.npy
+  #   obs_data_path_format: ../../data/processed/Corcasim/obs_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+  #   interpolation_data_path_format: ../../data/processed/Corcasim/interpolation_{method}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+  #   raw_data:
+  #     use: true
+  #     raw_path:
+  #       data_path_10000: /home/sda/data/Corcasim/powerIAEA10000.txt
+  #       data_path_8480: /home/sda/data/Corcasim/powerIAEA8480.txt
+  #     save:
+  #       use: true
+  #       args: None
+  #   observation:
+  #     use: false
+  #     args:
+  #       random_range: 1
+  #       noise_ratio: 0.0
+  #   interpolation:
+  #     use: false
+  
   Corcasim:
-    use: false
-    true_data_path: ../../data/processed/Corcasim/Corcasim.npy
-    obs_data_path_format: ../../data/processed/Corcasim/obs_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
-    interpolation_data_path_format: ../../data/processed/Corcasim/interpolation_{method}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
-    raw_data:
+  use: true 
+  true_data_path: ../../data/processed/Corcasim/Corcasim.npy
+  obs_data_path_format: ../../data/processed/Corcasim/obs_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+  interpolation_data_path_format: ../../data/processed/Corcasim/interpolation_{method}_vib_{random_range}_noise_{noise_ratio}_{x_sensor_position}_{y_sensor_position}.npy
+  raw_data:
+    use: true
+    raw_path:
+      data_path_10000: /home/sda/data/Corcasim/powerIAEA10000.txt
+      data_path_8480: /home/sda/data/Corcasim/powerIAEA8480.txt
+    save:
       use: true
-      raw_path:
-        data_path_10000: /home/sda/data/Corcasim/powerIAEA10000.txt
-        data_path_8480: /home/sda/data/Corcasim/powerIAEA8480.txt
-      save:
-        use: true
-        args: None
-    observation:
-      use: false
       args:
-        random_range: 1
-        noise_ratio: 0.0
-    interpolation:
-      use: false
+        data_path_10000: ../../data/processed/Corcasim/powerIAEA10000.npy
+        data_path_8480: ../../data/processed/Corcasim/powerIAEA8480.npy
+  observation:
+    use: true
+    args:
+      x_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]  
+      y_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]  
+      random_range: 0  
+      noise_ratio: 0.0  
+  interpolation:
+    use: true
+    args:
+      method: voronoi
+      x_shape: 86  
+      y_shape: 86  
+      x_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]  
+      y_sensor_position: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 85 ]  
